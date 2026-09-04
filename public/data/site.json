@@ -8,8 +8,14 @@
     "logoAlt": "Logo de ASEATI",
     "title": "Asociación de Estudiantes de Administración de Tecnología de Información",
     "lead": "Somos la organización que representa al estudiantado de ATI en el TEC: cercana, independiente y enfocada en que tu paso por la universidad sea más completo.",
-    "primaryCta": { "label": "Conocer más", "href": "#que-es" },
-    "secondaryCta": { "label": "Junta 2026", "href": "#junta" }
+    "primaryCta": {
+      "label": "Conocer más",
+      "href": "#que-es"
+    },
+    "secondaryCta": {
+      "label": "Junta 2026",
+      "href": "#junta"
+    }
   },
   "queEs": {
     "eyebrow": "Sobre nosotros",
@@ -162,20 +168,62 @@
       "caption": "Junta Directiva ASEATI · 2026"
     },
     "members": [
-      { "name": "Alejandro Vega Gamboa", "role": "Presidencia" },
-      { "name": "Alejandro Abarca Robles", "role": "Vicepresidencia" },
-      { "name": "Marian Agüero Quiros", "role": "Secretaría General" },
-      { "name": "Dennise Arias Fallas", "role": "Prosecretaría General" },
-      { "name": "Sebastián Rodríguez Zuñiga", "role": "Secretaría de Cultura y Deporte" },
-      { "name": "Génesis Arce Berrocal", "role": "Secretaría de Finanzas" },
-      { "name": "John Sebastian Ceciliano Piedra", "role": "Secretaría de Vinculación Empresarial" },
-      { "name": "Sara María Segura González", "role": "Secretaría de Comunicación y Mercadeo" },
-      { "name": "Mariángel Monge Marin", "role": "Secretaría Bienestar Estudiantil" },
-      { "name": "Adrián Ernesto Cascante Pérez", "role": "Fiscal Adjunto" },
-      { "name": "Alejandro Peñaranda Soto", "role": "Fiscal Adjunto" },
-      { "name": "Sebastian Sosa Alvarado", "role": "Vocalía I" },
-      { "name": "Victoria Alvarado Rivera", "role": "Vocalía II" },
-      { "name": "Esteban Brenes Montoya", "role": "Vocalía III" }
+      {
+        "name": "Alejandro Vega Gamboa",
+        "role": "Presidencia"
+      },
+      {
+        "name": "Alejandro Abarca Robles",
+        "role": "Vicepresidencia"
+      },
+      {
+        "name": "Marian Agüero Quiros",
+        "role": "Secretaría General"
+      },
+      {
+        "name": "Dennise Arias Fallas",
+        "role": "Prosecretaría General"
+      },
+      {
+        "name": "Sebastián Rodríguez Zuñiga",
+        "role": "Secretaría de Cultura y Deporte"
+      },
+      {
+        "name": "Génesis Arce Berrocal",
+        "role": "Secretaría de Finanzas"
+      },
+      {
+        "name": "John Sebastian Ceciliano Piedra",
+        "role": "Secretaría de Vinculación Empresarial"
+      },
+      {
+        "name": "Sara María Segura González",
+        "role": "Secretaría de Comunicación y Mercadeo"
+      },
+      {
+        "name": "Mariángel Monge Marin",
+        "role": "Secretaría Bienestar Estudiantil"
+      },
+      {
+        "name": "Adrián Ernesto Cascante Pérez",
+        "role": "Fiscal Adjunto"
+      },
+      {
+        "name": "Alejandro Peñaranda Soto",
+        "role": "Fiscal Adjunto"
+      },
+      {
+        "name": "Sebastian Sosa Alvarado",
+        "role": "Vocalía I"
+      },
+      {
+        "name": "Victoria Alvarado Rivera",
+        "role": "Vocalía II"
+      },
+      {
+        "name": "Esteban Brenes Montoya",
+        "role": "Vocalía III"
+      }
     ]
   },
   "tiendati": {

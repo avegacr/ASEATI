@@ -37,7 +37,7 @@ document.addEventListener("click", (event) => {
 });
 
 const revealItems = document.querySelectorAll(
-  ".section-inner, .media-frame, .mosaic-item, .feature-list li, .roles-grid article",
+  ".section-inner, .media-frame, .mosaic-item, .feature-list li, .roles-grid article, .remodel-timeline li",
 );
 
 if (revealItems.length && "IntersectionObserver" in window) {

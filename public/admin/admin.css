@@ -98,6 +98,15 @@ textarea {
 .error {
   color: var(--danger);
   font-weight: 600;
+  background: #fef3f2;
+  border: 1px solid rgba(180, 35, 24, 0.2);
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.8rem;
+}
+
+.login-card button:disabled {
+  opacity: 0.7;
+  cursor: wait;
 }
 
 .app-view {

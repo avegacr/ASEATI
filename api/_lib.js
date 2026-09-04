@@ -65,18 +65,42 @@ export function json(res, status, data) {
 
 export function readBody(req) {
   return new Promise((resolve, reject) => {
+    if (req.body != null) {
+      if (typeof req.body === "object") return resolve(req.body);
+      if (typeof req.body === "string") {
+        try {
+          return resolve(req.body ? JSON.parse(req.body) : null);
+        } catch (error) {
+          return reject(error);
+        }
+      }
+    }
+
     const chunks = [];
+    let settled = false;
+
+    const finish = (fn, value) => {
+      if (settled) return;
+      settled = true;
+      fn(value);
+    };
+
     req.on("data", (chunk) => chunks.push(chunk));
     req.on("end", () => {
       const raw = Buffer.concat(chunks).toString("utf8");
-      if (!raw) return resolve(null);
+      if (!raw) return finish(resolve, null);
       try {
-        resolve(JSON.parse(raw));
+        finish(resolve, JSON.parse(raw));
       } catch (error) {
-        reject(error);
+        finish(reject, error);
       }
     });
-    req.on("error", reject);
+    req.on("error", (error) => finish(reject, error));
+
+    // If the stream already ended with no data events, resolve null soon.
+    if (req.readableEnded) {
+      finish(resolve, null);
+    }
   });
 }
 

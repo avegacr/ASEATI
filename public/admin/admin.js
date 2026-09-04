@@ -346,7 +346,14 @@ async function api(path, options = {}) {
   const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
-  const response = await fetch(path, { ...options, headers });
+
+  let response;
+  try {
+    response = await fetch(path, { ...options, headers });
+  } catch {
+    throw new Error("No se pudo conectar con el servidor. Revisá tu conexión.");
+  }
+
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || `Error ${response.status}`);
   return data;
@@ -396,6 +403,12 @@ async function uploadFile(file, folder = "gallery") {
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   loginError.hidden = true;
+  const submitBtn = loginForm.querySelector('button[type="submit"]');
+  const previousLabel = submitBtn?.textContent;
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Entrando…";
+  }
   try {
     const password = document.querySelector("#password").value;
     const data = await api("/api/auth", {
@@ -404,11 +417,17 @@ loginForm.addEventListener("submit", async (event) => {
     });
     setToken(data.token);
     showApp();
-    setStatus("Sesión iniciada.");
+    setStatus("Sesión iniciada. Cargando contenido…");
     await loadContent();
+    setStatus("Contenido listo para editar.", "ok");
   } catch (error) {
-    loginError.textContent = error.message;
+    loginError.textContent = error.message || "No se pudo iniciar sesión.";
     loginError.hidden = false;
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = previousLabel || "Entrar";
+    }
   }
 });
 

@@ -1,0 +1,288 @@
+{
+  "meta": {
+    "title": "ASEATI | Asociación de Estudiantes de ATI",
+    "description": "ASEATI: la asociación estudiantil que representa a la comunidad de Administración de Tecnología de Información del TEC."
+  },
+  "hero": {
+    "logoSrc": "/logo-aseati.png",
+    "logoAlt": "Logo de ASEATI",
+    "title": "Asociación de Estudiantes de Administración de Tecnología de Información",
+    "lead": "Somos la organización que representa al estudiantado de ATI en el TEC: cercana, independiente y enfocada en que tu paso por la universidad sea más completo.",
+    "primaryCta": { "label": "Conocer más", "href": "#que-es" },
+    "secondaryCta": { "label": "Junta 2026", "href": "#junta" }
+  },
+  "queEs": {
+    "eyebrow": "Sobre nosotros",
+    "title": "Qué es ASEATI",
+    "lead": "ASEATI es la asociación que representa a las personas estudiantes de Administración de Tecnología de Información del Tecnológico de Costa Rica.",
+    "paragraphs": [
+      "Somos un organismo estudiantil autónomo e independiente, adscrito a FEITEC. No nos vinculamos oficialmente con partidos, ideologías políticas, filosofías ni credos religiosos: nuestro foco es el estudiantado de ATI.",
+      "Nuestro propósito principal es velar por tus intereses y tu bienestar. Eso significa representarte y defenderte en temas académicos, sociales, culturales y generales; llevar inquietudes ante la Escuela, el TEC u otras instancias; y procurar que las necesidades de la comunidad se escuchen de verdad."
+    ],
+    "image": {
+      "src": "/gallery/bienvenida-ati.jpg",
+      "alt": "Bienvenida a una nueva generación de ATI en el TEC",
+      "caption": "Bienvenida a nuevas generaciones de ATI"
+    }
+  },
+  "queHacemos": {
+    "eyebrow": "En la práctica",
+    "title": "Qué hacemos",
+    "lead": "Queremos que la vida universitaria vaya más allá de solo llevar cursos. Por eso impulsamos espacios, apoyo y conexión.",
+    "features": [
+      {
+        "title": "Formación y liderazgo",
+        "text": "Actividades, charlas, talleres y proyectos que refuerzan tu camino académico y profesional."
+      },
+      {
+        "title": "Vida universitaria",
+        "text": "Espacios sociales, culturales y deportivos para integrar a la comunidad de ATI."
+      },
+      {
+        "title": "Representación",
+        "text": "Canalizamos propuestas e inquietudes ante autoridades académicas y administrativas del TEC y FEITEC."
+      },
+      {
+        "title": "Calidad de la carrera",
+        "text": "Estamos atentos a que cursos, planes y recursos respondan a lo que la profesión y el país necesitan."
+      },
+      {
+        "title": "Vínculo con empresas",
+        "text": "Buscamos relacionarnos con el sector productivo y apoyar iniciativas estudiantiles con impacto real."
+      },
+      {
+        "title": "Información y derechos",
+        "text": "Mantenemos informada a la comunidad y fomentamos conciencia sobre derechos y deberes estudiantiles."
+      }
+    ],
+    "photos": [
+      {
+        "src": "/gallery/representacion.jpg",
+        "alt": "Representación estudiantil en un acto oficial del TEC",
+        "className": "mosaic-tall"
+      },
+      {
+        "src": "/gallery/deporte.jpg",
+        "alt": "Estudiantes de ATI en actividad deportiva",
+        "className": ""
+      },
+      {
+        "src": "/gallery/vinculacion-campus.jpg",
+        "alt": "Promoción de ATI y ASEATI en el campus",
+        "className": ""
+      },
+      {
+        "src": "/gallery/reconocimiento.jpg",
+        "alt": "Reconocimiento académico en ceremonia institucional",
+        "className": "mosaic-wide"
+      }
+    ]
+  },
+  "quienesSomos": {
+    "eyebrow": "Comunidad",
+    "title": "Quiénes somos",
+    "lead": "ASEATI no es solo la Junta Directiva. Si estás estudiando ATI y estás matriculado de forma regular, ya formás parte de la Asociación.",
+    "paragraphs": [
+      "La Junta Directiva administra el día a día y representa a la comunidad, pero la Asociación está hecha por todo el estudiantado de la carrera. Como miembro podés votar, participar en asambleas, proponer ideas, usar los servicios de la Asociación y pedir rendición de cuentas.",
+      "En resumen: la Junta lleva buena parte del trabajo cotidiano — bienestar, solicitudes, comisiones y representación — y vos sos parte activa de lo que ASEATI es y de lo que puede llegar a ser."
+    ],
+    "photos": [
+      {
+        "src": "/gallery/feria-globos.jpg",
+        "alt": "Equipo de ATI en feria universitaria con stand institucional"
+      },
+      {
+        "src": "/gallery/comunidad-cancha.jpg",
+        "alt": "Comunidad estudiantil reunida en una actividad de campus"
+      },
+      {
+        "src": "/gallery/bienvenida-marco.jpg",
+        "alt": "Estudiantes en marco de bienvenida ATI"
+      }
+    ]
+  },
+  "puestos": {
+    "eyebrow": "Cada año",
+    "title": "Puestos de la Junta Directiva",
+    "lead": "Estos son los cargos que se ofertan para conformar la Junta. Si te interesa liderar o apoyar, acá tenés una idea clara de cada rol.",
+    "roles": [
+      {
+        "title": "Presidencia",
+        "text": "Coordina la Junta, representa a ASEATI ante el TEC y FEITEC, y da seguimiento a las prioridades de la comunidad."
+      },
+      {
+        "title": "Vicepresidencia",
+        "text": "Apoya a la Presidencia, sustituye cuando hace falta y ayuda a coordinar proyectos transversales."
+      },
+      {
+        "title": "Secretaría General",
+        "text": "Organiza actas, convocatorias y la documentación oficial de la Asociación y sus asambleas."
+      },
+      {
+        "title": "Prosecretaría General",
+        "text": "Respalda el trabajo de Secretaría General y da continuidad a la gestión documental y logística."
+      },
+      {
+        "title": "Secretaría de Cultura y Deporte",
+        "text": "Impulsa actividades culturales, recreativas y deportivas para integrar a la comunidad de ATI."
+      },
+      {
+        "title": "Secretaría de Finanzas",
+        "text": "Administra recursos económicos, presupuestos y la transparencia en el uso de fondos de la Asociación."
+      },
+      {
+        "title": "Secretaría de Vinculación Empresarial",
+        "text": "Conecta a la asociación y al estudiantado con empresas, oportunidades y alianzas externas."
+      },
+      {
+        "title": "Secretaría de Comunicación y Mercadeo",
+        "text": "Mantiene informada a la comunidad y cuida la imagen y difusión de ASEATI en redes y canales oficiales."
+      },
+      {
+        "title": "Secretaría de Bienestar Estudiantil",
+        "text": "Atiende necesidades de bienestar, acompaña inquietudes y promueve un ambiente más humano en la carrera."
+      },
+      {
+        "title": "Fiscalía Adjunta",
+        "text": "Vela por el cumplimiento de acuerdos y normativa interna, y aporta una mirada de fiscalización a la gestión."
+      },
+      {
+        "title": "Vocalías I, II y III",
+        "text": "Apoyan proyectos, comisiones y representación; son un puente directo entre la Junta y el resto del estudiantado."
+      }
+    ]
+  },
+  "junta": {
+    "eyebrow": "Periodo actual",
+    "title": "Junta Directiva 2026",
+    "lead": "Estas son las personas que hoy representan y administran el trabajo cotidiano de ASEATI.",
+    "photo": {
+      "src": "/gallery/junta-2026.jpg",
+      "alt": "Junta Directiva de ASEATI 2026 con camisetas institucionales",
+      "caption": "Junta Directiva ASEATI · 2026"
+    },
+    "members": [
+      { "name": "Alejandro Vega Gamboa", "role": "Presidencia" },
+      { "name": "Alejandro Abarca Robles", "role": "Vicepresidencia" },
+      { "name": "Marian Agüero Quiros", "role": "Secretaría General" },
+      { "name": "Dennise Arias Fallas", "role": "Prosecretaría General" },
+      { "name": "Sebastián Rodríguez Zuñiga", "role": "Secretaría de Cultura y Deporte" },
+      { "name": "Génesis Arce Berrocal", "role": "Secretaría de Finanzas" },
+      { "name": "John Sebastian Ceciliano Piedra", "role": "Secretaría de Vinculación Empresarial" },
+      { "name": "Sara María Segura González", "role": "Secretaría de Comunicación y Mercadeo" },
+      { "name": "Mariángel Monge Marin", "role": "Secretaría Bienestar Estudiantil" },
+      { "name": "Adrián Ernesto Cascante Pérez", "role": "Fiscal Adjunto" },
+      { "name": "Alejandro Peñaranda Soto", "role": "Fiscal Adjunto" },
+      { "name": "Sebastian Sosa Alvarado", "role": "Vocalía I" },
+      { "name": "Victoria Alvarado Rivera", "role": "Vocalía II" },
+      { "name": "Esteban Brenes Montoya", "role": "Vocalía III" }
+    ]
+  },
+  "tiendati": {
+    "eyebrow": "Servicio estudiantil",
+    "title": "TiendAti",
+    "lead": "En la asociación vendemos snacks, helados, refrescos y más, a precios mucho más cómodos y accesibles para estudiantes.",
+    "note": "También vas a encontrar merch y detalles creados con cariño por la comunidad, como tote bags con identidad ATI. Pasá a visitarnos cuando estés por la asociación.",
+    "photos": [
+      {
+        "src": "/gallery/tiendati-tote.jpg",
+        "alt": "Tote bag con diseño ati frente al edificio de la carrera"
+      },
+      {
+        "src": "/gallery/tiendati-taller.jpg",
+        "alt": "Taller creativo de tote bags organizado con la comunidad"
+      }
+    ]
+  },
+  "remodelacion": {
+    "eyebrow": "2025 – 2026",
+    "title": "Remodelación de la ASEATI",
+    "lead": "Así fue el proceso de transformar el espacio de la asociación: desde el antes hasta el resultado final en blanco y gris.",
+    "steps": [
+      {
+        "src": "/gallery/remodelacion/01-antes-oficina.jpg",
+        "alt": "Oficina de ASEATI antes de la remodelación",
+        "caption": "El espacio antes de iniciar la remodelación"
+      },
+      {
+        "src": "/gallery/remodelacion/02-casilleros-trabajo.jpg",
+        "alt": "Trabajo en casilleros durante la remodelación",
+        "caption": "Intervención y trabajo en los casilleros"
+      },
+      {
+        "src": "/gallery/remodelacion/03-desalojo.jpg",
+        "alt": "Desalojo y organización del espacio previo a la obra",
+        "caption": "Desalojo y preparación del área"
+      },
+      {
+        "src": "/gallery/remodelacion/04-obra-drywall.jpg",
+        "alt": "Paredes en obra con drywall y materiales de pintura",
+        "caption": "Obra en paredes y preparación para pintar"
+      },
+      {
+        "src": "/gallery/remodelacion/05-casilleros.jpg",
+        "alt": "Casilleros metálicos del espacio previo",
+        "caption": "Estado de los casilleros en el proceso"
+      },
+      {
+        "src": "/gallery/remodelacion/06-mobiliario-nuevo.jpg",
+        "alt": "Llegada de mobiliario nuevo para el espacio",
+        "caption": "Llegada del mobiliario nuevo"
+      },
+      {
+        "src": "/gallery/remodelacion/07-pintura.jpg",
+        "alt": "Sala en proceso de pintura con paredes azules",
+        "caption": "Etapa de pintura del espacio"
+      },
+      {
+        "src": "/gallery/remodelacion/08-armando-sillas.jpg",
+        "alt": "Estudiantes armando sillas nuevas",
+        "caption": "Armado de sillas y mobiliario"
+      },
+      {
+        "src": "/gallery/remodelacion/09-armando-mesa.jpg",
+        "alt": "Ensamblaje de la mesa de vidrio",
+        "caption": "Ensamblaje de la mesa"
+      },
+      {
+        "src": "/gallery/remodelacion/10-espacio-parcial.jpg",
+        "alt": "Espacio parcialmente amueblado durante la remodelación",
+        "caption": "El espacio tomando forma"
+      },
+      {
+        "src": "/gallery/remodelacion/11-espacio-funcional.jpg",
+        "alt": "Espacio funcional con zona de trabajo y snacks",
+        "caption": "Zona de trabajo y servicio ya funcional"
+      },
+      {
+        "src": "/gallery/remodelacion/12-entrada-aseati.jpg",
+        "alt": "Entrada del local de ASEATI con letrero institucional",
+        "caption": "Entrada del local de ASEATI"
+      },
+      {
+        "src": "/gallery/remodelacion/13-resultado-final.jpg",
+        "alt": "Resultado final de la remodelación con paredes blanco y gris",
+        "caption": "Resultado final: paredes en blanco y gris"
+      }
+    ]
+  },
+  "reglamento": {
+    "eyebrow": "Documento vigente",
+    "title": "Reglamento interno",
+    "lead": "Acá podés consultar el Reglamento Interno de ASEATI vigente para 2026: derechos, deberes y funcionamiento de la Asociación.",
+    "pdfUrl": "/docs/reglamento-interno-aseati-2026.pdf",
+    "pdfDownloadName": "Reglamento-Interno-ASEATI-2026.pdf",
+    "openLabel": "Abrir PDF",
+    "downloadLabel": "Descargar"
+  },
+  "footer": {
+    "blurb": "Asociación de Estudiantes de Administración de Tecnología de Información · TEC · Adscrita a FEITEC",
+    "contactLabel": "Contacto",
+    "email": "aseati@estudiantec.cr",
+    "instagramHandle": "aseati.tec",
+    "instagramUrl": "https://instagram.com/aseati.tec",
+    "whatsappDisplay": "6293-1796",
+    "whatsappUrl": "https://wa.me/50662931796",
+    "copySuffix": "ASEATI. Hecho para la comunidad de ATI."
+  }
+}

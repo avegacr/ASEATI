@@ -1,0 +1,293 @@
+:root {
+  --ink: #0d2238;
+  --ink-soft: #2a4058;
+  --blue: #164a9a;
+  --cyan: #007a96;
+  --line: rgba(22, 74, 154, 0.16);
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --danger: #b42318;
+  --ok: #067647;
+  --font: "Outfit", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 70% 40% at 10% 0%, rgba(255, 220, 180, 0.35), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(170, 220, 245, 0.35), transparent 50%),
+    var(--bg);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.login-view {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.login-card {
+  width: min(26rem, 100%);
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 40px rgba(13, 34, 56, 0.08);
+}
+
+.login-card img {
+  width: 10rem;
+  height: auto;
+  margin: 0 auto;
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.login-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.login-card label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.login-card input {
+  min-height: 46px;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+}
+
+.login-card button,
+.admin-actions .primary,
+.item-actions button.primary {
+  min-height: 46px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--blue), var(--cyan));
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.error {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.app-view {
+  min-height: 100vh;
+}
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+
+.admin-header strong {
+  display: block;
+}
+
+.admin-header span {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.admin-actions a,
+.admin-actions button,
+.item-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status {
+  margin: 0;
+  padding: 0.65rem 1rem;
+  min-height: 1.2em;
+  font-weight: 600;
+}
+
+.status.ok {
+  color: var(--ok);
+  background: #ecfdf3;
+}
+
+.status.err {
+  color: var(--danger);
+  background: #fef3f2;
+}
+
+.admin-layout {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.admin-nav {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.admin-nav button {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink-soft);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-nav button.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: white;
+}
+
+.editor {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--card);
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: #fff;
+}
+
+.field textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.item {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 0.85rem;
+  background: #fbfdff;
+}
+
+.item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.item-actions button.danger {
+  color: var(--danger);
+  border-color: rgba(180, 35, 24, 0.3);
+}
+
+.hint {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+@media (min-width: 900px) {
+  .admin-layout {
+    grid-template-columns: 14rem 1fr;
+    align-items: start;
+  }
+
+  .admin-nav {
+    flex-direction: column;
+    overflow: visible;
+    position: sticky;
+    top: 5rem;
+  }
+
+  .admin-nav button {
+    justify-content: flex-start;
+  }
+}

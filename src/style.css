@@ -1,13 +1,13 @@
 :root {
-  --blue-deep: #1e5bb8;
-  --blue: #4a90e2;
-  --cyan: #00b8d9;
-  --cyan-soft: #7adcf0;
-  --ink: #1a3350;
-  --ink-soft: #4a6480;
-  --surface: rgba(255, 255, 255, 0.55);
-  --surface-strong: rgba(255, 255, 255, 0.9);
-  --line: rgba(74, 144, 226, 0.14);
+  --blue-deep: #164a9a;
+  --blue: #2f78c9;
+  --cyan: #007a96;
+  --cyan-soft: #0a91ad;
+  --ink: #0d2238;
+  --ink-soft: #2a4058;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: rgba(255, 255, 255, 0.96);
+  --line: rgba(22, 74, 154, 0.18);
   --warm-white: #fffcf8;
   --header-h: 3.75rem;
   --radius: 1.1rem;
@@ -38,8 +38,10 @@ body {
   color: var(--ink);
   background: var(--warm-white);
   line-height: 1.55;
+  font-weight: 500;
   overflow-x: clip;
   padding-bottom: env(safe-area-inset-bottom);
+  -webkit-font-smoothing: antialiased;
 }
 
 img {
@@ -248,10 +250,10 @@ a:hover {
 }
 
 .site-nav a {
-  color: var(--ink-soft);
+  color: var(--ink);
   text-decoration: none;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 0.85rem 0.9rem;
   border-radius: 0.75rem;
   min-height: 44px;
@@ -304,7 +306,8 @@ a:hover {
   margin: 0 auto 1.35rem;
   max-width: 38ch;
   color: var(--ink-soft);
-  font-size: 0.98rem;
+  font-size: 1.02rem;
+  font-weight: 500;
 }
 
 .hero-actions {
@@ -372,10 +375,10 @@ a:hover {
 
 .eyebrow {
   margin: 0 0 0.4rem;
-  color: var(--cyan);
-  font-size: 0.78rem;
+  color: var(--blue-deep);
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -391,7 +394,8 @@ a:hover {
   margin: 0 0 1.15rem;
   max-width: 52ch;
   color: var(--ink-soft);
-  font-size: 1rem;
+  font-size: 1.02rem;
+  font-weight: 500;
 }
 
 .prose {
@@ -403,7 +407,8 @@ a:hover {
 .prose p {
   margin: 0;
   color: var(--ink-soft);
-  font-size: 0.98rem;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .feature-list {
@@ -423,13 +428,15 @@ a:hover {
 }
 
 .feature-list strong {
-  font-size: 1rem;
+  font-size: 1.02rem;
+  font-weight: 700;
   color: var(--ink);
 }
 
 .feature-list span {
   color: var(--ink-soft);
-  font-size: 0.95rem;
+  font-size: 0.98rem;
+  font-weight: 500;
 }
 
 .roles-grid {
@@ -441,13 +448,15 @@ a:hover {
 .roles-grid h3 {
   margin: 0 0 0.3rem;
   font-size: 1.02rem;
+  font-weight: 700;
   color: var(--blue-deep);
 }
 
 .roles-grid p {
   margin: 0;
   color: var(--ink-soft);
-  font-size: 0.95rem;
+  font-size: 0.98rem;
+  font-weight: 500;
 }
 
 .media-frame {
@@ -477,7 +486,8 @@ a:hover {
 .media-frame figcaption {
   padding: 0.65rem 0.9rem 0.8rem;
   color: var(--ink-soft);
-  font-size: 0.86rem;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .photo-mosaic {
@@ -588,10 +598,10 @@ a:hover {
 
 .board-table td:first-child {
   width: auto;
-  color: var(--cyan);
-  font-size: 0.78rem;
+  color: var(--blue-deep);
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -600,15 +610,16 @@ a:hover {
 }
 
 .board-table td:nth-child(2) {
-  font-weight: 600;
-  font-size: 1.02rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   color: var(--ink);
   padding-top: 0.2rem;
 }
 
 .board-table td:nth-child(3) {
   color: var(--ink-soft);
-  font-size: 0.94rem;
+  font-size: 0.98rem;
+  font-weight: 500;
 }
 
 .board-table tbody tr:nth-child(even) {
@@ -619,7 +630,8 @@ a:hover {
   margin: 0;
   max-width: 48ch;
   color: var(--ink-soft);
-  font-size: 0.98rem;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .remodel-timeline {
@@ -658,7 +670,8 @@ a:hover {
   gap: 0.65rem;
   padding: 0.75rem 0.9rem 0.9rem;
   color: var(--ink-soft);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
+  font-weight: 500;
   line-height: 1.35;
 }
 
@@ -740,7 +753,8 @@ a:hover {
 .footer-contact li {
   margin: 0;
   color: var(--ink-soft);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .footer-label {

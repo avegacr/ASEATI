@@ -2,11 +2,76 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="/logo-aseati.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ASEATI</title>
+    <meta
+      name="description"
+      content="ASEATI: la asociación estudiantil que representa a la comunidad de Administración de Tecnología de Información del TEC."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>ASEATI | Asociación de Estudiantes de ATI</title>
   </head>
   <body>
-    <div id="app"><p>ASEATI</p></div>
+    <div class="bg-atmosphere" aria-hidden="true"></div>
+    <div class="bg-network" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="#inicio">
+        <img src="/logo-aseati.jpg" alt="ASEATI" width="44" height="44" />
+        <span>ASEATI</span>
+      </a>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Abrir menú"
+      >
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Principal">
+        <a href="#que-es">Qué es</a>
+        <a href="#que-hacemos">Qué hacemos</a>
+        <a href="#quienes-somos">Quiénes somos</a>
+        <a href="#puestos">Puestos</a>
+        <a href="#junta">Junta 2026</a>
+        <a href="#tiendati">TiendAti</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="inicio" class="hero">
+        <div class="hero-copy">
+          <img
+            class="hero-logo"
+            src="/logo-aseati.jpg"
+            alt="Logo de ASEATI"
+            width="120"
+            height="120"
+          />
+          <p class="hero-brand">ASEATI</p>
+          <h1>
+            Asociación de Estudiantes de Administración de Tecnología de
+            Información
+          </h1>
+          <p class="hero-lead">
+            Somos la organización que representa al estudiantado de ATI en el
+            TEC: cercana, independiente y enfocada en que tu paso por la
+            universidad sea más completo.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#que-es">Conocer más</a>
+            <a class="btn btn-secondary" href="#junta">Junta 2026</a>
+          </div>
+        </div>
+      </section>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

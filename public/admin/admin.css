@@ -39,6 +39,11 @@ textarea {
   padding: 1.25rem;
 }
 
+.login-view[hidden],
+.app-view[hidden] {
+  display: none !important;
+}
+
 .login-card {
   width: min(26rem, 100%);
   display: grid;

@@ -350,11 +350,23 @@ async function api(path, options = {}) {
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 20000);
+
   let response;
   try {
-    response = await fetch(path, { ...options, headers });
-  } catch {
+    response = await fetch(path, {
+      ...options,
+      headers,
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("La solicitud tardó demasiado. Intentá de nuevo.");
+    }
     throw new Error("No se pudo conectar con el servidor. Revisá tu conexión.");
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   const data = await response.json().catch(() => ({}));
@@ -363,17 +375,20 @@ async function api(path, options = {}) {
 }
 
 async function loadContent() {
-  // Prefer API (with sha). Fallback to static JSON for local/dev without GitHub.
+  // Prefer static JSON for speed; then refresh SHA from API when available.
+  const staticRes = await fetch("/data/site.json", { cache: "no-store" });
+  if (!staticRes.ok) throw new Error("No se pudo cargar el contenido.");
+  content = await staticRes.json();
+  renderTab();
+
   try {
     const data = await api("/api/content");
-    content = data.content;
-    if (data.sha) sessionStorage.setItem(SHA_KEY, data.sha);
+    if (data?.content) content = data.content;
+    if (data?.sha) sessionStorage.setItem(SHA_KEY, data.sha);
+    renderTab();
   } catch {
-    const response = await fetch("/data/site.json", { cache: "no-store" });
-    if (!response.ok) throw new Error("No se pudo cargar el contenido.");
-    content = await response.json();
+    // Keep static content; saving will still try GitHub and report errors.
   }
-  renderTab();
 }
 
 function showApp() {

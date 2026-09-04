@@ -13,6 +13,7 @@ function setNavOpen(open) {
   nav.classList.toggle("is-open", open);
   toggle.setAttribute("aria-expanded", open ? "true" : "false");
   toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+  document.body.style.overflow = open ? "hidden" : "";
 }
 
 toggle?.addEventListener("click", () => {

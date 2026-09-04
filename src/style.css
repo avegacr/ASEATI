@@ -675,6 +675,37 @@ a:hover {
   font-weight: 700;
 }
 
+.doc-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0 0 1.25rem;
+  width: min(22rem, 100%);
+}
+
+.pdf-frame {
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow);
+}
+
+.pdf-frame iframe {
+  display: block;
+  width: 100%;
+  height: min(70vh, 36rem);
+  border: 0;
+  background: #f4f7fb;
+}
+
+.pdf-fallback {
+  margin: 0;
+  padding: 0.75rem 1rem 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
 .site-footer {
   margin-top: 1.25rem;
   padding:
@@ -791,6 +822,11 @@ a:hover {
   .hero-actions {
     flex-direction: row;
     justify-content: center;
+    width: auto;
+  }
+
+  .doc-actions {
+    flex-direction: row;
     width: auto;
   }
 
@@ -1040,6 +1076,10 @@ a:hover {
   .remodel-timeline {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+  }
+
+  .pdf-frame iframe {
+    height: min(78vh, 48rem);
   }
 
   .media-feature img {

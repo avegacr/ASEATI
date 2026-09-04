@@ -135,7 +135,9 @@ export function renderSite(data) {
 
   const tiendati = data.tiendati ?? {};
   setText("#tiendati .eyebrow", tiendati.eyebrow);
-  setText("#tiendati h2", tiendati.title);
+  setAttr("#tiendati .tiendati-logo", "src", tiendati.logoSrc || "/logo-tiendati.png");
+  setAttr("#tiendati .tiendati-logo", "alt", tiendati.logoAlt || "Logo de TIENDATI");
+  setText("#tiendati .tiendati-title", tiendati.title);
   setText("#tiendati .section-lead", tiendati.lead);
   setText("#tiendati .tiendati-note", tiendati.note);
   setHtml(
@@ -147,6 +149,10 @@ export function renderSite(data) {
       )
       .join(""),
   );
+
+  // Keep nav label in sync with TIENDATI title when present
+  const tiendaNav = document.querySelector('#site-nav a[href="#tiendati"]');
+  if (tiendaNav && tiendati.title) tiendaNav.textContent = tiendati.title;
 
   const remodel = data.remodelacion ?? {};
   setText("#remodelacion .eyebrow", remodel.eyebrow);

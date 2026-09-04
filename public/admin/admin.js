@@ -279,11 +279,14 @@ function renderTab() {
   }
 
   if (activeTab === "tiendati") {
-    html = `<section class="panel"><h2>TiendAti</h2>
+    html = `<section class="panel"><h2>TIENDATI</h2>
       ${field("Eyebrow", "tiendati.eyebrow", c.tiendati.eyebrow)}
       ${field("Título", "tiendati.title", c.tiendati.title)}
+      ${field("Logo (URL)", "tiendati.logoSrc", c.tiendati.logoSrc || "/logo-tiendati.png")}
+      ${field("Alt del logo", "tiendati.logoAlt", c.tiendati.logoAlt || "Logo de TIENDATI")}
       ${field("Lead", "tiendati.lead", c.tiendati.lead, true)}
       ${field("Nota", "tiendati.note", c.tiendati.note, true)}
+      <div class="item-actions"><button type="button" data-action="upload-single" data-target="tiendati.logoSrc">Subir logo</button></div>
       <h3>Fotos</h3>
       ${photosEditor("tiendati.photos", c.tiendati.photos)}
     </section>`;

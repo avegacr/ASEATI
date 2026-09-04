@@ -626,6 +626,25 @@ a:hover {
   background: rgba(255, 255, 255, 0.92);
 }
 
+.tiendati-logo {
+  width: min(16rem, 78%);
+  height: auto;
+  margin: 0.35rem 0 0.55rem;
+  filter: drop-shadow(0 10px 22px rgba(30, 91, 184, 0.16));
+}
+
+.tiendati-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .tiendati-note {
   margin: 0;
   max-width: 48ch;

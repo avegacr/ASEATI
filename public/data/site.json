@@ -180,7 +180,9 @@
   },
   "tiendati": {
     "eyebrow": "Servicio estudiantil",
-    "title": "TiendAti",
+    "title": "TIENDATI",
+    "logoSrc": "/logo-tiendati.png",
+    "logoAlt": "Logo de TIENDATI",
     "lead": "En la asociación vendemos snacks, helados, refrescos y más, a precios mucho más cómodos y accesibles para estudiantes.",
     "note": "También vas a encontrar merch y detalles creados con cariño por la comunidad, como tote bags con identidad ATI. Pasá a visitarnos cuando estés por la asociación.",
     "photos": [

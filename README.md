@@ -19,3 +19,6 @@ npm run preview
 ## Deploy
 
 El sitio se publica en Vercel a partir del build de Vite (`dist`).
+
+- Producción: https://aseati.vercel.app
+- Repositorio: https://github.com/avegacr/ASEATI

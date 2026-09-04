@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/jpeg" href="/logo-aseati.jpg" />
+    <link rel="icon" type="image/png" href="/logo-aseati.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
@@ -18,12 +18,14 @@
   </head>
   <body>
     <div class="bg-atmosphere" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-a" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-b" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-c" aria-hidden="true"></div>
     <div class="bg-network" aria-hidden="true"></div>
 
     <header class="site-header">
       <a class="brand" href="#inicio">
-        <img src="/logo-aseati.jpg" alt="ASEATI" width="44" height="44" />
-        <span>ASEATI</span>
+        <img src="/logo-aseati.png" alt="ASEATI" width="160" height="70" />
       </a>
       <button
         class="nav-toggle"
@@ -50,12 +52,11 @@
         <div class="hero-copy">
           <img
             class="hero-logo"
-            src="/logo-aseati.jpg"
+            src="/logo-aseati.png"
             alt="Logo de ASEATI"
-            width="120"
-            height="120"
+            width="420"
+            height="185"
           />
-          <p class="hero-brand">ASEATI</p>
           <h1>
             Asociación de Estudiantes de Administración de Tecnología de
             Información
@@ -73,29 +74,41 @@
       </section>
 
       <section id="que-es" class="section">
-        <div class="section-inner">
-          <p class="eyebrow">Sobre nosotros</p>
-          <h2>Qué es ASEATI</h2>
-          <p class="section-lead">
-            ASEATI es la asociación que representa a las personas estudiantes de
-            Administración de Tecnología de Información del Tecnológico de Costa
-            Rica.
-          </p>
-          <div class="prose">
-            <p>
-              Somos un organismo estudiantil autónomo e independiente, adscrito
-              a FEITEC. No nos vinculamos oficialmente con partidos,
-              ideologías políticas, filosofías ni credos religiosos: nuestro
-              foco es el estudiantado de ATI.
+        <div class="section-inner section-split">
+          <div>
+            <p class="eyebrow">Sobre nosotros</p>
+            <h2>Qué es ASEATI</h2>
+            <p class="section-lead">
+              ASEATI es la asociación que representa a las personas estudiantes
+              de Administración de Tecnología de Información del Tecnológico de
+              Costa Rica.
             </p>
-            <p>
-              Nuestro propósito principal es velar por tus intereses y tu
-              bienestar. Eso significa representarte y defenderte en temas
-              académicos, sociales, culturales y generales; llevar inquietudes
-              ante la Escuela, el TEC u otras instancias; y procurar que las
-              necesidades de la comunidad se escuchen de verdad.
-            </p>
+            <div class="prose">
+              <p>
+                Somos un organismo estudiantil autónomo e independiente,
+                adscrito a FEITEC. No nos vinculamos oficialmente con partidos,
+                ideologías políticas, filosofías ni credos religiosos: nuestro
+                foco es el estudiantado de ATI.
+              </p>
+              <p>
+                Nuestro propósito principal es velar por tus intereses y tu
+                bienestar. Eso significa representarte y defenderte en temas
+                académicos, sociales, culturales y generales; llevar inquietudes
+                ante la Escuela, el TEC u otras instancias; y procurar que las
+                necesidades de la comunidad se escuchen de verdad.
+              </p>
+            </div>
           </div>
+          <figure class="media-frame">
+            <img
+              src="/gallery/bienvenida-ati.jpg"
+              alt="Bienvenida a una nueva generación de ATI en el TEC"
+              width="720"
+              height="960"
+              loading="lazy"
+            />
+            <figcaption>Bienvenida a nuevas generaciones de ATI</figcaption>
+          </figure>
         </div>
       </section>
 
@@ -151,6 +164,37 @@
               >
             </li>
           </ul>
+
+          <div class="photo-mosaic" aria-label="Momentos de ASEATI en acción">
+            <figure class="mosaic-item mosaic-tall">
+              <img
+                src="/gallery/representacion.jpg"
+                alt="Representación estudiantil en un acto oficial del TEC"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item">
+              <img
+                src="/gallery/deporte.jpg"
+                alt="Estudiantes de ATI en actividad deportiva"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item">
+              <img
+                src="/gallery/vinculacion-campus.jpg"
+                alt="Promoción de ATI y ASEATI en el campus"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item mosaic-wide">
+              <img
+                src="/gallery/reconocimiento.jpg"
+                alt="Reconocimiento académico en ceremonia institucional"
+                loading="lazy"
+              />
+            </figure>
+          </div>
         </div>
       </section>
 
@@ -176,6 +220,30 @@
               bienestar, solicitudes, comisiones y representación — y vos sos
               parte activa de lo que ASEATI es y de lo que puede llegar a ser.
             </p>
+          </div>
+
+          <div class="photo-row">
+            <figure class="media-frame">
+              <img
+                src="/gallery/feria-globos.jpg"
+                alt="Equipo de ATI en feria universitaria con stand institucional"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="media-frame">
+              <img
+                src="/gallery/comunidad-cancha.jpg"
+                alt="Comunidad estudiantil reunida en una actividad de campus"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="media-frame">
+              <img
+                src="/gallery/bienvenida-marco.jpg"
+                alt="Estudiantes en marco de bienvenida ATI"
+                loading="lazy"
+              />
+            </figure>
           </div>
         </div>
       </section>
@@ -278,7 +346,24 @@
             Estas son las personas que hoy representan y administran el trabajo
             cotidiano de ASEATI.
           </p>
-          <div class="table-wrap" role="region" aria-label="Junta Directiva 2026" tabindex="0">
+
+          <figure class="media-frame media-feature">
+            <img
+              src="/gallery/junta-2026.jpg"
+              alt="Junta Directiva de ASEATI 2026 con camisetas institucionales"
+              width="1200"
+              height="800"
+              loading="lazy"
+            />
+            <figcaption>Junta Directiva ASEATI · 2026</figcaption>
+          </figure>
+
+          <div
+            class="table-wrap"
+            role="region"
+            aria-label="Junta Directiva 2026"
+            tabindex="0"
+          >
             <table class="board-table">
               <thead>
                 <tr>
@@ -365,18 +450,36 @@
       </section>
 
       <section id="tiendati" class="section section-tiendati">
-        <div class="section-inner">
-          <p class="eyebrow">Servicio estudiantil</p>
-          <h2>TiendAti</h2>
-          <p class="section-lead">
-            En la asociación vendemos snacks, helados, refrescos y más, a
-            precios mucho más cómodos y accesibles para estudiantes.
-          </p>
-          <p class="tiendati-note">
-            Es una venta pensada para el día a día en campus: algo rico, cerca y
-            sin romper el presupuesto. Pasá a visitarnos cuando estés por la
-            asociación.
-          </p>
+        <div class="section-inner section-split">
+          <div>
+            <p class="eyebrow">Servicio estudiantil</p>
+            <h2>TiendAti</h2>
+            <p class="section-lead">
+              En la asociación vendemos snacks, helados, refrescos y más, a
+              precios mucho más cómodos y accesibles para estudiantes.
+            </p>
+            <p class="tiendati-note">
+              También vas a encontrar merch y detalles creados con cariño por la
+              comunidad, como tote bags con identidad ATI. Pasá a visitarnos
+              cuando estés por la asociación.
+            </p>
+          </div>
+          <div class="photo-stack">
+            <figure class="media-frame">
+              <img
+                src="/gallery/tiendati-tote.jpg"
+                alt="Tote bag con diseño ati frente al edificio de la carrera"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="media-frame">
+              <img
+                src="/gallery/tiendati-taller.jpg"
+                alt="Taller creativo de tote bags organizado con la comunidad"
+                loading="lazy"
+              />
+            </figure>
+          </div>
         </div>
       </section>
     </main>
@@ -384,9 +487,8 @@
     <footer class="site-footer">
       <div class="footer-inner">
         <div class="footer-brand">
-          <img src="/logo-aseati.jpg" alt="" width="48" height="48" />
+          <img src="/logo-aseati.png" alt="" width="140" height="62" />
           <div>
-            <strong>ASEATI</strong>
             <p>
               Asociación de Estudiantes de Administración de Tecnología de
               Información · TEC · Adscrita a FEITEC

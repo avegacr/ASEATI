@@ -34,3 +34,26 @@ document.addEventListener("click", (event) => {
     setNavOpen(false);
   }
 });
+
+const revealItems = document.querySelectorAll(
+  ".section-inner, .media-frame, .mosaic-item, .feature-list li, .roles-grid article",
+);
+
+if (revealItems.length && "IntersectionObserver" in window) {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduceMotion) {
+    revealItems.forEach((el) => el.classList.add("reveal"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    revealItems.forEach((el) => observer.observe(el));
+  }
+}

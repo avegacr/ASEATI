@@ -30,18 +30,20 @@
     </div>
 
     <div id="app-view" class="app-view" hidden>
-      <header class="admin-header">
-        <div>
-          <strong>ASEATI Admin</strong>
-          <span>Edición de contenido</span>
-        </div>
-        <div class="admin-actions">
-          <a href="/" target="_blank" rel="noopener">Ver sitio</a>
-          <button type="button" id="save-btn" class="primary">Guardar cambios</button>
-          <button type="button" id="logout-btn">Salir</button>
-        </div>
-      </header>
-      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div class="admin-top">
+        <header class="admin-header">
+          <div>
+            <strong>ASEATI Admin</strong>
+            <span>Edición de contenido</span>
+          </div>
+          <div class="admin-actions">
+            <a href="/" target="_blank" rel="noopener">Ver sitio</a>
+            <button type="button" id="save-btn" class="primary">Guardar cambios</button>
+            <button type="button" id="logout-btn">Salir</button>
+          </div>
+        </header>
+        <p id="status" class="status" role="status" aria-live="polite" hidden></p>
+      </div>
       <div class="admin-layout">
         <nav class="admin-nav" aria-label="Secciones">
           <button type="button" data-tab="hero" class="active">Hero</button>

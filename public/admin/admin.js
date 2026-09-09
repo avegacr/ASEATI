@@ -47,8 +47,38 @@ function clearSession() {
 }
 
 function setStatus(message, type = "") {
-  statusEl.textContent = message || "";
+  if (!statusEl) return;
+  const text = String(message || "").trim();
+  statusEl.textContent = text;
   statusEl.className = `status ${type}`.trim();
+  statusEl.hidden = !text;
+  if (text) {
+    statusEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+}
+
+function setSaveButtonState(state) {
+  if (!saveBtn) return;
+  saveBtn.classList.remove("is-saved", "is-error");
+  if (state === "saving") {
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Guardando…";
+    return;
+  }
+  if (state === "saved") {
+    saveBtn.disabled = false;
+    saveBtn.textContent = "Guardado";
+    saveBtn.classList.add("is-saved");
+    return;
+  }
+  if (state === "error") {
+    saveBtn.disabled = false;
+    saveBtn.textContent = "Error al guardar";
+    saveBtn.classList.add("is-error");
+    return;
+  }
+  saveBtn.disabled = false;
+  saveBtn.textContent = "Guardar cambios";
 }
 
 function markDirty() {
@@ -824,9 +854,11 @@ logoutBtn.addEventListener("click", () => {
 });
 
 saveBtn.addEventListener("click", async () => {
+  if (saveBtn.disabled) return;
   try {
     syncFromDom();
-    setStatus("Guardando…");
+    setSaveButtonState("saving");
+    setStatus("Guardando cambios…");
     const data = await api("/api/content", {
       method: "PUT",
       body: JSON.stringify({
@@ -836,13 +868,17 @@ saveBtn.addEventListener("click", async () => {
     });
     if (data.sha) sessionStorage.setItem(SHA_KEY, data.sha);
     clearDirty();
+    setSaveButtonState("saved");
     setStatus(
       data.message ||
-        "Guardado. El sitio público puede tardar 1–2 minutos en actualizarse.",
+        "Listo: cambios guardados. El sitio público puede tardar 1–2 minutos en actualizarse.",
       "ok",
     );
+    window.setTimeout(() => setSaveButtonState("idle"), 2500);
   } catch (error) {
-    setStatus(error.message, "err");
+    setSaveButtonState("error");
+    setStatus(error.message || "No se pudo guardar. Intentá de nuevo.", "err");
+    window.setTimeout(() => setSaveButtonState("idle"), 3500);
   }
 });
 

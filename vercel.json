@@ -4,5 +4,13 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/admin", "destination": "/admin/index.html" }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.aseati.com" }],
+      "destination": "https://aseati.com/:path*",
+      "permanent": true
+    }
   ]
 }

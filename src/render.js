@@ -22,16 +22,42 @@ function setAttr(selector, attr, value) {
   if (el) el.setAttribute(attr, value ?? "");
 }
 
+function setMetaContent(selector, value) {
+  const el = document.querySelector(selector);
+  if (el && value != null) el.setAttribute("content", value);
+}
+
 export function renderSite(data) {
   if (!data) return;
 
-  if (data.meta?.title) document.title = data.meta.title;
-  const desc = document.querySelector('meta[name="description"]');
-  if (desc && data.meta?.description) desc.setAttribute("content", data.meta.description);
+  if (data.meta?.title) {
+    document.title = data.meta.title;
+    setMetaContent('meta[property="og:title"]', data.meta.title);
+    setMetaContent('meta[name="twitter:title"]', data.meta.title);
+  }
+  if (data.meta?.description) {
+    setMetaContent('meta[name="description"]', data.meta.description);
+    setMetaContent('meta[property="og:description"]', data.meta.description);
+    setMetaContent('meta[name="twitter:description"]', data.meta.description);
+  }
+  if (data.meta?.ogImage) {
+    setMetaContent('meta[property="og:image"]', data.meta.ogImage);
+    setMetaContent('meta[name="twitter:image"]', data.meta.ogImage);
+  }
+  if (data.meta?.siteUrl) {
+    const siteUrl = String(data.meta.siteUrl).replace(/\/$/, "") + "/";
+    setAttr('link[rel="canonical"]', "href", siteUrl);
+    setMetaContent('meta[property="og:url"]', siteUrl);
+  }
+
+  renderNav(data.nav);
 
   const hero = data.hero ?? {};
   setAttr(".hero-logo", "src", hero.logoSrc);
   setAttr(".hero-logo", "alt", hero.logoAlt);
+  setAttr(".brand-logo", "src", hero.logoSrc || "/logo-aseati.png");
+  setAttr(".brand-logo", "alt", hero.logoAlt || "ASEATI");
+  setAttr(".footer-logo", "src", hero.logoSrc || "/logo-aseati.png");
   setText("#inicio h1", hero.title);
   setText(".hero-lead", hero.lead);
   const primary = document.querySelector(".hero-actions .btn-primary");
@@ -59,6 +85,110 @@ export function renderSite(data) {
     setText("#que-es .media-frame figcaption", queEs.image.caption);
   }
 
+  const carreraAti = data.carreraAti ?? {};
+  setText("#carrera-ati .eyebrow", carreraAti.eyebrow);
+  setText("#carrera-ati h2", carreraAti.title);
+  setText("#carrera-ati .section-lead", carreraAti.lead);
+  setHtml(
+    "#carrera-ati > .section-inner > .prose",
+    (carreraAti.paragraphs ?? []).map((p) => `<p>${escapeHtml(p)}</p>`).join(""),
+  );
+  setText("#carrera-ati .ati-role h3", carreraAti.roleTitle);
+  setText("#carrera-ati .ati-role p", carreraAti.roleText);
+  setHtml(
+    "#carrera-ati .ati-facts",
+    (carreraAti.facts ?? [])
+      .map(
+        (fact) =>
+          `<li><strong>${escapeHtml(fact.value)}</strong><span>${escapeHtml(fact.label)}</span></li>`,
+      )
+      .join(""),
+  );
+  const planTitle = document.querySelector('[data-ati="plan-title"]');
+  const planLead = document.querySelector('[data-ati="plan-lead"]');
+  const planList = document.querySelector('[data-ati="plan-list"]');
+  const careersTitle = document.querySelector('[data-ati="careers-title"]');
+  const careersLead = document.querySelector('[data-ati="careers-lead"]');
+  const careersList = document.querySelector('[data-ati="careers-list"]');
+  if (planTitle) planTitle.textContent = carreraAti.planTitle ?? "";
+  if (planLead) planLead.textContent = carreraAti.planLead ?? "";
+  if (planList) {
+    planList.innerHTML = (carreraAti.planAreas ?? [])
+      .map(
+        (item) =>
+          `<li><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.text)}</span></li>`,
+      )
+      .join("");
+  }
+  if (careersTitle) careersTitle.textContent = carreraAti.careersTitle ?? "";
+  if (careersLead) careersLead.textContent = carreraAti.careersLead ?? "";
+  if (careersList) {
+    careersList.innerHTML = (carreraAti.careers ?? [])
+      .map(
+        (item) =>
+          `<li><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.text)}</span></li>`,
+      )
+      .join("");
+  }
+  const atiCta = document.querySelector("#carrera-ati .ati-cta-wrap a");
+  if (atiCta) {
+    atiCta.textContent = carreraAti.ctaLabel ?? "Ver la carrera en el TEC";
+    atiCta.setAttribute("href", carreraAti.ctaHref ?? "#");
+  }
+
+  const acred = data.acreditacion ?? {};
+  setText("#acreditacion .eyebrow", acred.eyebrow);
+  setText("#acreditacion h2", acred.title);
+  setText("#acreditacion .section-lead", acred.lead);
+  setHtml(
+    "#acreditacion .acred-stats",
+    (acred.stats ?? [])
+      .map(
+        (stat) =>
+          `<li><strong>${escapeHtml(stat.value)}</strong><span>${escapeHtml(stat.label)}</span></li>`,
+      )
+      .join(""),
+  );
+  setHtml(
+    "#acreditacion .prose",
+    (acred.paragraphs ?? []).map((p) => `<p>${escapeHtml(p)}</p>`).join(""),
+  );
+  const quoteEl = document.querySelector("#acreditacion .acred-quote");
+  if (quoteEl && acred.quote) {
+    const quoteText = quoteEl.querySelector("p");
+    const quoteAuthor = quoteEl.querySelector("cite");
+    const quoteRole = quoteEl.querySelector("footer span");
+    if (quoteText) quoteText.textContent = `“${acred.quote.text ?? ""}”`;
+    if (quoteAuthor) quoteAuthor.textContent = acred.quote.author ?? "";
+    if (quoteRole) quoteRole.textContent = acred.quote.role ?? "";
+  }
+  const acredPhotos = document.querySelector("#acreditacion .acred-photos");
+  if (acredPhotos) {
+    const photos = acred.photos ?? [];
+    if (photos.length) {
+      acredPhotos.hidden = false;
+      acredPhotos.innerHTML = photos
+        .map(
+          (photo) =>
+            `<figure class="media-frame"><img src="${escapeHtml(photo.src)}" alt="${escapeHtml(photo.alt)}" loading="lazy" /></figure>`,
+        )
+        .join("");
+    } else {
+      acredPhotos.hidden = true;
+      acredPhotos.innerHTML = "";
+    }
+  }
+  setText("#acreditacion .acred-links-label", acred.linksLabel ?? "Más información y noticias");
+  setHtml(
+    "#acreditacion .acred-links ul",
+    (acred.links ?? [])
+      .map(
+        (link) =>
+          `<li><a href="${escapeHtml(link.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}</a></li>`,
+      )
+      .join(""),
+  );
+
   const queHacemos = data.queHacemos ?? {};
   setText("#que-hacemos .eyebrow", queHacemos.eyebrow);
   setText("#que-hacemos h2", queHacemos.title);
@@ -75,6 +205,25 @@ export function renderSite(data) {
   setHtml(
     "#que-hacemos .photo-mosaic",
     (queHacemos.photos ?? [])
+      .map((photo) => {
+        const cls = ["mosaic-item", photo.className].filter(Boolean).join(" ");
+        return `<figure class="${cls}"><img src="${escapeHtml(photo.src)}" alt="${escapeHtml(photo.alt)}" loading="lazy" /></figure>`;
+      })
+      .join(""),
+  );
+
+  const fiestas = data.fiestasAti ?? {};
+  setText("#fiestas-ati .eyebrow", fiestas.eyebrow);
+  setText("#fiestas-ati h2", fiestas.title);
+  setText("#fiestas-ati .section-lead", fiestas.lead);
+  setHtml(
+    "#fiestas-ati .prose",
+    (fiestas.paragraphs ?? []).map((p) => `<p>${escapeHtml(p)}</p>`).join(""),
+  );
+  setText("#fiestas-ati .fiestas-note", fiestas.note);
+  setHtml(
+    "#fiestas-ati .photo-mosaic",
+    (fiestas.photos ?? [])
       .map((photo) => {
         const cls = ["mosaic-item", photo.className].filter(Boolean).join(" ");
         return `<figure class="${cls}"><img src="${escapeHtml(photo.src)}" alt="${escapeHtml(photo.alt)}" loading="lazy" /></figure>`;
@@ -104,6 +253,17 @@ export function renderSite(data) {
   setText("#puestos .eyebrow", puestos.eyebrow);
   setText("#puestos h2", puestos.title);
   setText("#puestos .section-lead", puestos.lead);
+  setText("#puestos .puestos-intro p", puestos.intro);
+  setText("#puestos .puestos-requirements h3", puestos.requirementsTitle);
+  setHtml(
+    "#puestos .puestos-requirements ol",
+    (puestos.requirements ?? [])
+      .map((item) => `<li>${escapeHtml(item)}</li>`)
+      .join(""),
+  );
+  const puestosNote = document.querySelector("#puestos .puestos-note");
+  if (puestosNote && puestos.noteHtml) puestosNote.innerHTML = puestos.noteHtml;
+  setText("#puestos .puestos-roles-title", puestos.rolesTitle);
   setHtml(
     "#puestos .roles-grid",
     (puestos.roles ?? [])
@@ -191,10 +351,44 @@ export function renderSite(data) {
     downloadBtn.setAttribute("download", reglamento.pdfDownloadName ?? "reglamento.pdf");
   }
   if (iframe) {
-    iframe.setAttribute("src", `${reglamento.pdfUrl ?? ""}#view=FitH`);
+    const pdfUrl = reglamento.pdfUrl ?? "";
+    // Keep PDF out of iframe src until desktop preview loads it.
+    // Mobile browsers often force-download PDFs embedded in iframes.
+    iframe.removeAttribute("src");
+    iframe.setAttribute("data-src", pdfUrl ? `${pdfUrl}#view=FitH` : "");
     iframe.setAttribute("title", reglamento.title ?? "Reglamento");
   }
   if (fallbackLink) fallbackLink.setAttribute("href", reglamento.pdfUrl ?? "#");
+
+  const consultas = data.consultas ?? {};
+  setText("#consultas .eyebrow", consultas.eyebrow);
+  setText("#consultas h2", consultas.title);
+  setText("#consultas .section-lead", consultas.lead);
+  setText("#consultas-form legend", consultas.modeLegend || "¿Cómo querés enviarlo?");
+  const identifiedLabel = document.querySelector('#consultas input[value="identified"] + span');
+  const anonymousLabel = document.querySelector('#consultas input[value="anonymous"] + span');
+  if (identifiedLabel) identifiedLabel.textContent = consultas.identifiedLabel ?? "Con mis datos";
+  if (anonymousLabel) anonymousLabel.textContent = consultas.anonymousLabel ?? "Anónimo";
+  setText('#consultas [data-privacy="identified"]', consultas.identifiedNote);
+  setText('#consultas [data-privacy="anonymous"]', consultas.anonymousNote);
+  setText('[data-consultas-label="topic"]', consultas.topicLabel || "Tipo de mensaje");
+  setText('[data-consultas-label="name"]', consultas.nameLabel || "Nombre");
+  setText('[data-consultas-label="email"]', consultas.emailLabel || "Correo (opcional)");
+  setText('[data-consultas-label="message"]', consultas.messageLabel || "Mensaje");
+  setAttr('#consultas-form input[name="name"]', "placeholder", consultas.namePlaceholder || "Tu nombre");
+  setAttr('#consultas-form input[name="email"]', "placeholder", consultas.emailPlaceholder || "para poder responderte");
+  setAttr('#consultas-form textarea[name="message"]', "placeholder", consultas.messagePlaceholder || "");
+  const topicSelect = document.querySelector('#consultas-form select[name="topic"]');
+  if (topicSelect && Array.isArray(consultas.topics) && consultas.topics.length) {
+    topicSelect.innerHTML = consultas.topics
+      .map(
+        (topic) =>
+          `<option value="${escapeHtml(topic.value)}">${escapeHtml(topic.label || topic.value)}</option>`,
+      )
+      .join("");
+  }
+  const submitBtn = document.querySelector("#consultas-form button[type=submit]");
+  if (submitBtn) submitBtn.textContent = consultas.submitLabel ?? "Enviar a ASEATI";
 
   const footer = data.footer ?? {};
   setText(".footer-brand p", footer.blurb);
@@ -215,6 +409,48 @@ export function renderSite(data) {
     waLink.setAttribute("href", footer.whatsappUrl ?? "#");
   }
   setText("[data-copy-suffix]", footer.copySuffix ?? "");
+}
+
+function renderNav(nav) {
+  const root = document.querySelector("#site-nav");
+  if (!root || !nav) return;
+
+  const groups = nav.groups ?? [];
+  const directLinks = nav.directLinks ?? [];
+  if (!groups.length && !directLinks.length) return;
+
+  const groupsHtml = groups
+    .map((group, index) => {
+      const id = group.id || `nav-group-${index}`;
+      const submenuId = `nav-${id}`;
+      const links = (group.links ?? [])
+        .map((link) => `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`)
+        .join("");
+      return `
+        <div class="nav-group">
+          <button
+            type="button"
+            class="nav-group-toggle"
+            aria-expanded="false"
+            aria-controls="${escapeHtml(submenuId)}"
+          >
+            ${escapeHtml(group.label)}
+          </button>
+          <div id="${escapeHtml(submenuId)}" class="nav-submenu" role="group" hidden>
+            ${links}
+          </div>
+        </div>`;
+    })
+    .join("");
+
+  const directHtml = directLinks
+    .map(
+      (link) =>
+        `<a class="nav-link-direct" href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`,
+    )
+    .join("");
+
+  root.innerHTML = `${groupsHtml}${directHtml}`;
 }
 
 export async function loadSiteContent() {

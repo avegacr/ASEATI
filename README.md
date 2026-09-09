@@ -24,8 +24,8 @@ npm run preview
 
 ## Deploy
 
-- Producción: https://aseati.vercel.app
-- Panel admin: https://aseati.vercel.app/admin
+- Producción: https://aseati.com (mientras el DNS propaga: https://aseati.vercel.app)
+- Panel admin: `/admin` (mismo dominio)
 - Repositorio: https://github.com/avegacr/ASEATI
 
 ## Panel de administración
@@ -50,6 +50,10 @@ Configurá estas variables en el proyecto de Vercel (Settings → Environment Va
 | `GITHUB_REPO` | `avegacr/ASEATI` |
 | `GITHUB_BRANCH` | `main` |
 | `DEPLOY_HOOK_URL` | (Opcional) Deploy Hook de Vercel para forzar redeploy al guardar |
+| `SITE_URL` | Origen público. Hoy `https://aseati.vercel.app`; al activar el dominio, `https://aseati.com` |
+| `CONTACT_TO_EMAIL` | (Opcional) Destino del buzón. Por defecto `aseati@estudiantec.cr` |
+| `WEB3FORMS_ACCESS_KEY` | Clave de [Web3Forms](https://web3forms.com) para entregar el buzón a `aseati@estudiantec.cr` |
+| `RESEND_API_KEY` | (Opcional) Alternativa a Web3Forms |
 
 ### Cambiar la contraseña cada año
 

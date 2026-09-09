@@ -56,6 +56,23 @@ export function getBearer(req) {
   return match ? match[1] : null;
 }
 
+const FALLBACK_SITE_ORIGIN = "https://aseati.vercel.app";
+
+export function getSiteOrigin(req) {
+  const fromEnv = process.env.SITE_URL || process.env.CONTACT_ORIGIN;
+  if (fromEnv) return String(fromEnv).replace(/\/$/, "");
+
+  const hostHeader = req?.headers?.["x-forwarded-host"] || req?.headers?.host;
+  const host = hostHeader?.toString().split(",")[0].trim();
+  if (host) {
+    const protoHeader = req.headers["x-forwarded-proto"]?.toString().split(",")[0].trim();
+    const proto = protoHeader || "https";
+    return `${proto}://${host}`;
+  }
+
+  return FALLBACK_SITE_ORIGIN;
+}
+
 export function json(res, status, data) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -152,4 +169,96 @@ export async function githubPutFile(path, contentBase64, message, sha) {
     throw new Error(`GitHub PUT falló (${response.status}): ${text}`);
   }
   return response.json();
+}
+
+export async function githubDeleteFile(path, sha, message) {
+  const repo = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || "main";
+  const token = process.env.GITHUB_TOKEN;
+  if (!repo || !token) throw new Error("Faltan GITHUB_REPO o GITHUB_TOKEN.");
+
+  const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "Content-Type": "application/json",
+      "User-Agent": "aseati-admin",
+    },
+    body: JSON.stringify({
+      message,
+      branch,
+      sha,
+    }),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`GitHub DELETE falló (${response.status}): ${text}`);
+  }
+  return response.json();
+}
+
+export async function githubListFiles(prefixes = ["public/gallery", "public/docs"]) {
+  const repo = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || "main";
+  const token = process.env.GITHUB_TOKEN;
+  if (!repo || !token) throw new Error("Faltan GITHUB_REPO o GITHUB_TOKEN.");
+
+  const refUrl = `https://api.github.com/repos/${repo}/git/ref/heads/${encodeURIComponent(branch)}`;
+  const refRes = await fetch(refUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "aseati-admin",
+    },
+  });
+  if (!refRes.ok) {
+    const text = await refRes.text();
+    throw new Error(`GitHub REF falló (${refRes.status}): ${text}`);
+  }
+  const ref = await refRes.json();
+  const commitSha = ref.object?.sha;
+  if (!commitSha) throw new Error("No se pudo resolver el commit de la rama.");
+
+  const commitUrl = `https://api.github.com/repos/${repo}/git/commits/${commitSha}`;
+  const commitRes = await fetch(commitUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "aseati-admin",
+    },
+  });
+  if (!commitRes.ok) {
+    const text = await commitRes.text();
+    throw new Error(`GitHub COMMIT falló (${commitRes.status}): ${text}`);
+  }
+  const commit = await commitRes.json();
+  const treeSha = commit.tree?.sha;
+  if (!treeSha) throw new Error("No se pudo resolver el árbol del repo.");
+
+  const treeUrl = `https://api.github.com/repos/${repo}/git/trees/${treeSha}?recursive=1`;
+  const treeRes = await fetch(treeUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "aseati-admin",
+    },
+  });
+  if (!treeRes.ok) {
+    const text = await treeRes.text();
+    throw new Error(`GitHub TREE falló (${treeRes.status}): ${text}`);
+  }
+  const tree = await treeRes.json();
+  const allowed = Array.isArray(prefixes) ? prefixes : [prefixes];
+  return (tree.tree ?? [])
+    .filter((item) => item.type === "blob")
+    .filter((item) => allowed.some((prefix) => item.path === prefix || item.path.startsWith(`${prefix}/`)))
+    .map((item) => ({
+      path: item.path,
+      url: item.path.replace(/^public/, ""),
+      size: item.size ?? 0,
+      sha: item.sha,
+    }))
+    .sort((a, b) => a.path.localeCompare(b.path));
 }

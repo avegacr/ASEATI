@@ -12,6 +12,26 @@ const logoutBtn = document.querySelector("#logout-btn");
 
 let content = null;
 let activeTab = "hero";
+let dirty = false;
+let mediaCache = null;
+
+const FOLDER_BY_BASE = {
+  "fiestasAti.photos": "gallery/fiestas",
+  "acreditacion.photos": "gallery/acreditacion",
+  "queHacemos.photos": "gallery/que-hacemos",
+  "quienesSomos.photos": "gallery/quienes",
+  "tiendati.photos": "gallery/tiendati",
+  "remodelacion.steps": "gallery/remodelacion",
+};
+
+const FOLDER_BY_TARGET = {
+  "hero.logoSrc": "gallery",
+  "queEs.image.src": "gallery",
+  "junta.photo.src": "gallery/junta",
+  "tiendati.logoSrc": "gallery/tiendati",
+  "reglamento.pdfUrl": "docs",
+  "meta.ogImage": "gallery",
+};
 
 function getToken() {
   return sessionStorage.getItem(TOKEN_KEY);
@@ -31,12 +51,12 @@ function setStatus(message, type = "") {
   statusEl.className = `status ${type}`.trim();
 }
 
-function field(label, key, value, multiline = false) {
-  const id = `f-${key.replaceAll(".", "-")}`;
-  if (multiline) {
-    return `<div class="field"><label for="${id}">${label}</label><textarea id="${id}" data-key="${key}">${escapeAttr(value)}</textarea></div>`;
-  }
-  return `<div class="field"><label for="${id}">${label}</label><input id="${id}" data-key="${key}" value="${escapeAttr(value)}" /></div>`;
+function markDirty() {
+  dirty = true;
+}
+
+function clearDirty() {
+  dirty = false;
 }
 
 function escapeAttr(value) {
@@ -47,11 +67,41 @@ function escapeAttr(value) {
     .replaceAll(">", "&gt;");
 }
 
+function field(label, key, value, multiline = false) {
+  const id = `f-${key.replaceAll(".", "-")}`;
+  if (multiline) {
+    return `<div class="field"><label for="${id}">${label}</label><textarea id="${id}" data-key="${key}">${escapeAttr(value)}</textarea></div>`;
+  }
+  return `<div class="field"><label for="${id}">${label}</label><input id="${id}" data-key="${key}" value="${escapeAttr(value)}" /></div>`;
+}
+
+function imagePreview(src) {
+  const url = String(src || "").trim();
+  if (!url) {
+    return `<div class="media-preview empty"><span>Sin imagen</span></div>`;
+  }
+  if (url.toLowerCase().endsWith(".pdf") || url.includes("/docs/")) {
+    return `<div class="media-preview pdf"><a href="${escapeAttr(url)}" target="_blank" rel="noopener">Abrir PDF</a><code>${escapeAttr(url)}</code></div>`;
+  }
+  return `<div class="media-preview"><img src="${escapeAttr(url)}" alt="" loading="lazy" /><div class="media-preview-meta"><a href="${escapeAttr(url)}" target="_blank" rel="noopener">Abrir</a><code>${escapeAttr(url)}</code></div></div>`;
+}
+
+function moveButtons() {
+  return `
+    <button type="button" data-action="up">Arriba</button>
+    <button type="button" data-action="down">Abajo</button>
+    <button type="button" class="danger" data-action="remove">Eliminar</button>`;
+}
+
 function readFields(root = editor) {
   root.querySelectorAll("[data-key]").forEach((el) => {
     const key = el.getAttribute("data-key");
     setPath(content, key, el.value);
   });
+}
+
+function getPath(obj, path) {
+  return path.split(".").reduce((cur, part) => (cur == null ? undefined : cur[part]), obj);
 }
 
 function setPath(obj, path, value) {
@@ -67,6 +117,19 @@ function setPath(obj, path, value) {
   cur[parts[parts.length - 1]] = value;
 }
 
+function ensureArray(path) {
+  const parts = path.split(".");
+  let cur = content;
+  for (let i = 0; i < parts.length - 1; i += 1) {
+    const part = parts[i];
+    if (cur[part] == null) cur[part] = {};
+    cur = cur[part];
+  }
+  const last = parts[parts.length - 1];
+  if (!Array.isArray(cur[last])) cur[last] = [];
+  return cur[last];
+}
+
 function paragraphsEditor(baseKey, paragraphs) {
   return `
     <div class="list" data-list="paragraphs" data-base="${baseKey}">
@@ -75,11 +138,7 @@ function paragraphsEditor(baseKey, paragraphs) {
           (p, i) => `
         <div class="item" data-index="${i}">
           ${field(`Párrafo ${i + 1}`, `${baseKey}.${i}`, p, true)}
-          <div class="item-actions">
-            <button type="button" data-action="up">Subir</button>
-            <button type="button" data-action="down">Bajar</button>
-            <button type="button" class="danger" data-action="remove">Eliminar</button>
-          </div>
+          <div class="item-actions">${moveButtons()}</div>
         </div>`,
         )
         .join("")}
@@ -89,40 +148,54 @@ function paragraphsEditor(baseKey, paragraphs) {
 
 function featuresEditor(features) {
   return `
-    <div class="list" data-list="features">
+    <div class="list" data-list="features" data-base="queHacemos.features">
       ${(features ?? [])
         .map(
           (f, i) => `
         <div class="item" data-index="${i}">
           ${field("Título", `queHacemos.features.${i}.title`, f.title)}
           ${field("Texto", `queHacemos.features.${i}.text`, f.text, true)}
-          <div class="item-actions">
-            <button type="button" data-action="up">Subir</button>
-            <button type="button" data-action="down">Bajar</button>
-            <button type="button" class="danger" data-action="remove">Eliminar</button>
-          </div>
+          <div class="item-actions">${moveButtons()}</div>
         </div>`,
         )
         .join("")}
-      <button type="button" class="primary" data-action="add-feature">Agregar ítem</button>
+      <button type="button" class="primary" data-action="add-kv" data-empty='{"title":"","text":""}'>Agregar ítem</button>
+    </div>`;
+}
+
+function kvListEditor(basePath, items, fields, addLabel) {
+  return `
+    <div class="list" data-list="kv" data-base="${basePath}">
+      ${(items ?? [])
+        .map(
+          (item, i) => `
+        <div class="item" data-index="${i}">
+          ${fields
+            .map((f) => field(f.label, `${basePath}.${i}.${f.key}`, item?.[f.key] ?? "", Boolean(f.multiline)))
+            .join("")}
+          <div class="item-actions">${moveButtons()}</div>
+        </div>`,
+        )
+        .join("")}
+      <button type="button" class="primary" data-action="add-kv" data-empty='${escapeAttr(JSON.stringify(Object.fromEntries(fields.map((f) => [f.key, ""]))))}'>${addLabel}</button>
     </div>`;
 }
 
 function photosEditor(basePath, photos, withClass = false) {
+  const folder = FOLDER_BY_BASE[basePath] || "gallery";
   return `
-    <div class="list" data-list="photos" data-base="${basePath}">
+    <div class="list" data-list="photos" data-base="${basePath}" data-folder="${folder}">
       ${(photos ?? [])
         .map(
           (p, i) => `
         <div class="item" data-index="${i}">
+          ${imagePreview(p.src)}
           ${field("URL imagen", `${basePath}.${i}.src`, p.src)}
           ${field("Texto alternativo", `${basePath}.${i}.alt`, p.alt)}
           ${withClass ? field("Clase (mosaic-tall / mosaic-wide / vacío)", `${basePath}.${i}.className`, p.className || "") : ""}
           <div class="item-actions">
-            <button type="button" data-action="upload">Subir imagen</button>
-            <button type="button" data-action="up">Subir</button>
-            <button type="button" data-action="down">Bajar</button>
-            <button type="button" class="danger" data-action="remove">Eliminar</button>
+            <button type="button" data-action="upload" data-folder="${folder}">Subir archivo</button>
+            ${moveButtons()}
           </div>
         </div>`,
         )
@@ -133,67 +206,153 @@ function photosEditor(basePath, photos, withClass = false) {
 
 function rolesEditor(roles) {
   return `
-    <div class="list" data-list="roles">
+    <div class="list" data-list="roles" data-base="puestos.roles">
       ${(roles ?? [])
         .map(
           (r, i) => `
         <div class="item" data-index="${i}">
           ${field("Puesto", `puestos.roles.${i}.title`, r.title)}
           ${field("Descripción", `puestos.roles.${i}.text`, r.text, true)}
-          <div class="item-actions">
-            <button type="button" data-action="up">Subir</button>
-            <button type="button" data-action="down">Bajar</button>
-            <button type="button" class="danger" data-action="remove">Eliminar</button>
-          </div>
+          <div class="item-actions">${moveButtons()}</div>
         </div>`,
         )
         .join("")}
-      <button type="button" class="primary" data-action="add-role">Agregar puesto</button>
+      <button type="button" class="primary" data-action="add-kv" data-empty='{"title":"","text":""}'>Agregar puesto</button>
     </div>`;
 }
 
 function membersEditor(members) {
   return `
-    <div class="list" data-list="members">
+    <div class="list" data-list="members" data-base="junta.members">
       ${(members ?? [])
         .map(
           (m, i) => `
         <div class="item" data-index="${i}">
           ${field("Nombre", `junta.members.${i}.name`, m.name)}
           ${field("Puesto", `junta.members.${i}.role`, m.role)}
-          <div class="item-actions">
-            <button type="button" data-action="up">Subir</button>
-            <button type="button" data-action="down">Bajar</button>
-            <button type="button" class="danger" data-action="remove">Eliminar</button>
-          </div>
+          <div class="item-actions">${moveButtons()}</div>
         </div>`,
         )
         .join("")}
-      <button type="button" class="primary" data-action="add-member">Agregar miembro</button>
+      <button type="button" class="primary" data-action="add-kv" data-empty='{"name":"","role":""}'>Agregar miembro</button>
     </div>`;
 }
 
 function remodelEditor(steps) {
   return `
-    <div class="list" data-list="steps">
+    <div class="list" data-list="steps" data-base="remodelacion.steps" data-folder="gallery/remodelacion">
       ${(steps ?? [])
         .map(
           (s, i) => `
         <div class="item" data-index="${i}">
+          ${imagePreview(s.src)}
           ${field("URL imagen", `remodelacion.steps.${i}.src`, s.src)}
           ${field("Texto alternativo", `remodelacion.steps.${i}.alt`, s.alt)}
           ${field("Pie de foto", `remodelacion.steps.${i}.caption`, s.caption)}
           <div class="item-actions">
-            <button type="button" data-action="upload-remodel">Subir imagen</button>
-            <button type="button" data-action="up">Subir</button>
-            <button type="button" data-action="down">Bajar</button>
-            <button type="button" class="danger" data-action="remove">Eliminar</button>
+            <button type="button" data-action="upload" data-folder="gallery/remodelacion">Subir archivo</button>
+            ${moveButtons()}
           </div>
         </div>`,
         )
         .join("")}
-      <button type="button" class="primary" data-action="add-step">Agregar paso</button>
+      <button type="button" class="primary" data-action="add-kv" data-empty='{"src":"","alt":"","caption":""}'>Agregar paso</button>
     </div>`;
+}
+
+function singleImageBlock(title, srcKey, altKey, captionKey, folder) {
+  const src = getPath(content, srcKey) || "";
+  return `
+    <h3>${title}</h3>
+    ${imagePreview(src)}
+    ${field("URL", srcKey, src)}
+    ${altKey ? field("Alt", altKey, getPath(content, altKey) || "") : ""}
+    ${captionKey ? field("Pie", captionKey, getPath(content, captionKey) || "") : ""}
+    <div class="item-actions">
+      <button type="button" data-action="upload-single" data-target="${srcKey}" data-folder="${folder}">Subir archivo</button>
+    </div>`;
+}
+
+function navEditor(nav) {
+  const groups = nav?.groups ?? [];
+  return `
+    <div class="list" data-list="nav-groups" data-base="nav.groups">
+      ${groups
+        .map(
+          (g, gi) => `
+        <div class="item" data-index="${gi}">
+          ${field("Etiqueta del grupo", `nav.groups.${gi}.label`, g.label)}
+          ${field("ID (para aria)", `nav.groups.${gi}.id`, g.id || "")}
+          <div class="list" data-list="nav-links" data-base="nav.groups.${gi}.links">
+            ${(g.links ?? [])
+              .map(
+                (link, li) => `
+              <div class="item nested" data-index="${li}">
+                ${field("Texto", `nav.groups.${gi}.links.${li}.label`, link.label)}
+                ${field("Enlace (#sección)", `nav.groups.${gi}.links.${li}.href`, link.href)}
+                <div class="item-actions">${moveButtons()}</div>
+              </div>`,
+              )
+              .join("")}
+            <button type="button" class="primary" data-action="add-kv" data-empty='{"label":"","href":"#"}'>Agregar enlace</button>
+          </div>
+          <div class="item-actions">${moveButtons()}</div>
+        </div>`,
+        )
+        .join("")}
+      <button type="button" class="primary" data-action="add-kv" data-empty='{"id":"","label":"Nuevo grupo","links":[]}'>Agregar grupo</button>
+    </div>
+    <h3>Enlaces directos</h3>
+    ${kvListEditor(
+      "nav.directLinks",
+      nav?.directLinks ?? [],
+      [
+        { key: "label", label: "Texto" },
+        { key: "href", label: "Enlace (#sección)" },
+      ],
+      "Agregar enlace directo",
+    )}`;
+}
+
+async function renderMediaTab() {
+  setStatus("Cargando medios…");
+  try {
+    const data = await api("/api/media");
+    mediaCache = data.files || [];
+    setStatus(`${mediaCache.length} archivos en gallery/docs.`);
+  } catch (error) {
+    mediaCache = [];
+    setStatus(error.message, "err");
+  }
+
+  const files = mediaCache || [];
+  return `<section class="panel"><h2>Medios</h2>
+    <p class="hint">Archivos en el repositorio bajo <code>/gallery</code> y <code>/docs</code>. Copiá la ruta o eliminá archivos no usados. Para asociarlos a una sección, pegá la URL en el campo correspondiente y guardá.</p>
+    <div class="item-actions" style="margin-bottom:0.75rem">
+      <button type="button" class="primary" data-action="refresh-media">Actualizar lista</button>
+    </div>
+    <div class="media-grid">
+      ${files
+        .map((file) => {
+          const isPdf = file.url.toLowerCase().endsWith(".pdf");
+          return `
+          <article class="media-card" data-path="${escapeAttr(file.path)}">
+            ${
+              isPdf
+                ? `<div class="media-card-preview pdf">PDF</div>`
+                : `<img src="${escapeAttr(file.url)}" alt="" loading="lazy" />`
+            }
+            <code>${escapeAttr(file.url)}</code>
+            <div class="item-actions">
+              <button type="button" data-action="copy-url" data-url="${escapeAttr(file.url)}">Copiar ruta</button>
+              <a href="${escapeAttr(file.url)}" target="_blank" rel="noopener">Abrir</a>
+              <button type="button" class="danger" data-action="delete-media" data-path="${escapeAttr(file.path)}">Eliminar</button>
+            </div>
+          </article>`;
+        })
+        .join("") || `<p class="hint">No hay archivos listados todavía.</p>`}
+    </div>
+  </section>`;
 }
 
 function renderTab() {
@@ -205,12 +364,18 @@ function renderTab() {
     html = `<section class="panel"><h2>Hero</h2>
       ${field("Título", "hero.title", c.hero.title, true)}
       ${field("Texto introductorio", "hero.lead", c.hero.lead, true)}
-      ${field("Logo (URL)", "hero.logoSrc", c.hero.logoSrc)}
-      ${field("Alt del logo", "hero.logoAlt", c.hero.logoAlt)}
+      ${singleImageBlock("Logo", "hero.logoSrc", "hero.logoAlt", null, "gallery")}
       ${field("CTA principal · texto", "hero.primaryCta.label", c.hero.primaryCta.label)}
       ${field("CTA principal · enlace", "hero.primaryCta.href", c.hero.primaryCta.href)}
       ${field("CTA secundario · texto", "hero.secondaryCta.label", c.hero.secondaryCta.label)}
       ${field("CTA secundario · enlace", "hero.secondaryCta.href", c.hero.secondaryCta.href)}
+    </section>`;
+  }
+
+  if (activeTab === "nav") {
+    html = `<section class="panel"><h2>Navegación</h2>
+      <p class="hint">Editá grupos del menú y sus enlaces. Usá anclas existentes (#que-es, #fiestas-ati, etc.).</p>
+      ${navEditor(c.nav ?? { groups: [], directLinks: [] })}
     </section>`;
   }
 
@@ -221,11 +386,96 @@ function renderTab() {
       ${field("Lead", "queEs.lead", c.queEs.lead, true)}
       <h3>Párrafos</h3>
       ${paragraphsEditor("queEs.paragraphs", c.queEs.paragraphs)}
-      <h3>Imagen</h3>
-      ${field("URL", "queEs.image.src", c.queEs.image.src)}
-      ${field("Alt", "queEs.image.alt", c.queEs.image.alt)}
-      ${field("Pie", "queEs.image.caption", c.queEs.image.caption)}
-      <div class="item-actions"><button type="button" data-action="upload-single" data-target="queEs.image.src">Subir imagen</button></div>
+      ${singleImageBlock("Imagen", "queEs.image.src", "queEs.image.alt", "queEs.image.caption", "gallery")}
+    </section>`;
+  }
+
+  if (activeTab === "carreraAti") {
+    const a = c.carreraAti ?? {};
+    html = `<section class="panel"><h2>Qué es ATI</h2>
+      ${field("Eyebrow", "carreraAti.eyebrow", a.eyebrow)}
+      ${field("Título", "carreraAti.title", a.title)}
+      ${field("Lead", "carreraAti.lead", a.lead, true)}
+      <h3>Párrafos</h3>
+      ${paragraphsEditor("carreraAti.paragraphs", a.paragraphs ?? [])}
+      <h3>Rol destacado</h3>
+      ${field("Título del rol", "carreraAti.roleTitle", a.roleTitle)}
+      ${field("Texto del rol", "carreraAti.roleText", a.roleText, true)}
+      <h3>Datos clave</h3>
+      ${kvListEditor(
+        "carreraAti.facts",
+        a.facts ?? [],
+        [
+          { key: "value", label: "Valor" },
+          { key: "label", label: "Etiqueta" },
+        ],
+        "Agregar dato",
+      )}
+      <h3>Plan de estudios</h3>
+      ${field("Título", "carreraAti.planTitle", a.planTitle)}
+      ${field("Lead", "carreraAti.planLead", a.planLead, true)}
+      ${kvListEditor(
+        "carreraAti.planAreas",
+        a.planAreas ?? [],
+        [
+          { key: "title", label: "Área" },
+          { key: "text", label: "Descripción", multiline: true },
+        ],
+        "Agregar área",
+      )}
+      <h3>Proyección laboral</h3>
+      ${field("Título", "carreraAti.careersTitle", a.careersTitle)}
+      ${field("Lead", "carreraAti.careersLead", a.careersLead, true)}
+      ${kvListEditor(
+        "carreraAti.careers",
+        a.careers ?? [],
+        [
+          { key: "title", label: "Rol" },
+          { key: "text", label: "Descripción", multiline: true },
+        ],
+        "Agregar rol",
+      )}
+      <h3>Enlace al TEC</h3>
+      ${field("Texto del botón", "carreraAti.ctaLabel", a.ctaLabel)}
+      ${field("URL", "carreraAti.ctaHref", a.ctaHref)}
+    </section>`;
+  }
+
+  if (activeTab === "acreditacion") {
+    const a = c.acreditacion ?? {};
+    html = `<section class="panel"><h2>Acreditación</h2>
+      ${field("Eyebrow", "acreditacion.eyebrow", a.eyebrow)}
+      ${field("Título", "acreditacion.title", a.title)}
+      ${field("Lead", "acreditacion.lead", a.lead, true)}
+      <h3>Datos clave</h3>
+      ${kvListEditor(
+        "acreditacion.stats",
+        a.stats ?? [],
+        [
+          { key: "value", label: "Valor" },
+          { key: "label", label: "Etiqueta" },
+        ],
+        "Agregar dato",
+      )}
+      <h3>Párrafos</h3>
+      ${paragraphsEditor("acreditacion.paragraphs", a.paragraphs ?? [])}
+      <h3>Cita</h3>
+      ${field("Texto", "acreditacion.quote.text", a.quote?.text, true)}
+      ${field("Autor", "acreditacion.quote.author", a.quote?.author)}
+      ${field("Rol", "acreditacion.quote.role", a.quote?.role)}
+      <h3>Fotos</h3>
+      ${photosEditor("acreditacion.photos", a.photos ?? [])}
+      <h3>Enlaces / noticias</h3>
+      ${field("Etiqueta", "acreditacion.linksLabel", a.linksLabel || "Más información y noticias")}
+      ${kvListEditor(
+        "acreditacion.links",
+        a.links ?? [],
+        [
+          { key: "label", label: "Texto del enlace" },
+          { key: "href", label: "URL" },
+        ],
+        "Agregar enlace",
+      )}
     </section>`;
   }
 
@@ -238,6 +488,19 @@ function renderTab() {
       ${featuresEditor(c.queHacemos.features)}
       <h3>Fotos</h3>
       ${photosEditor("queHacemos.photos", c.queHacemos.photos, true)}
+    </section>`;
+  }
+
+  if (activeTab === "fiestasAti") {
+    html = `<section class="panel"><h2>Fiestas ATI</h2>
+      ${field("Eyebrow", "fiestasAti.eyebrow", c.fiestasAti.eyebrow)}
+      ${field("Título", "fiestasAti.title", c.fiestasAti.title)}
+      ${field("Lead", "fiestasAti.lead", c.fiestasAti.lead, true)}
+      <h3>Párrafos</h3>
+      ${paragraphsEditor("fiestasAti.paragraphs", c.fiestasAti.paragraphs)}
+      ${field("Nota", "fiestasAti.note", c.fiestasAti.note, true)}
+      <h3>Fotos</h3>
+      ${photosEditor("fiestasAti.photos", c.fiestasAti.photos, true)}
     </section>`;
   }
 
@@ -258,6 +521,12 @@ function renderTab() {
       ${field("Eyebrow", "puestos.eyebrow", c.puestos.eyebrow)}
       ${field("Título", "puestos.title", c.puestos.title)}
       ${field("Lead", "puestos.lead", c.puestos.lead, true)}
+      ${field("Intro", "puestos.intro", c.puestos.intro, true)}
+      ${field("Título requisitos", "puestos.requirementsTitle", c.puestos.requirementsTitle)}
+      <h3>Requisitos</h3>
+      ${paragraphsEditor("puestos.requirements", c.puestos.requirements ?? [])}
+      ${field("Nota (HTML permitido)", "puestos.noteHtml", c.puestos.noteHtml, true)}
+      ${field("Título de cargos", "puestos.rolesTitle", c.puestos.rolesTitle)}
       <h3>Roles</h3>
       ${rolesEditor(c.puestos.roles)}
     </section>`;
@@ -268,11 +537,7 @@ function renderTab() {
       ${field("Eyebrow", "junta.eyebrow", c.junta.eyebrow)}
       ${field("Título", "junta.title", c.junta.title)}
       ${field("Lead", "junta.lead", c.junta.lead, true)}
-      <h3>Foto grupal</h3>
-      ${field("URL", "junta.photo.src", c.junta.photo.src)}
-      ${field("Alt", "junta.photo.alt", c.junta.photo.alt)}
-      ${field("Pie", "junta.photo.caption", c.junta.photo.caption)}
-      <div class="item-actions"><button type="button" data-action="upload-single" data-target="junta.photo.src">Subir imagen</button></div>
+      ${singleImageBlock("Foto grupal", "junta.photo.src", "junta.photo.alt", "junta.photo.caption", "gallery/junta")}
       <h3>Miembros</h3>
       ${membersEditor(c.junta.members)}
     </section>`;
@@ -282,11 +547,9 @@ function renderTab() {
     html = `<section class="panel"><h2>TIENDATI</h2>
       ${field("Eyebrow", "tiendati.eyebrow", c.tiendati.eyebrow)}
       ${field("Título", "tiendati.title", c.tiendati.title)}
-      ${field("Logo (URL)", "tiendati.logoSrc", c.tiendati.logoSrc || "/logo-tiendati.png")}
-      ${field("Alt del logo", "tiendati.logoAlt", c.tiendati.logoAlt || "Logo de TIENDATI")}
+      ${singleImageBlock("Logo", "tiendati.logoSrc", "tiendati.logoAlt", null, "gallery/tiendati")}
       ${field("Lead", "tiendati.lead", c.tiendati.lead, true)}
       ${field("Nota", "tiendati.note", c.tiendati.note, true)}
-      <div class="item-actions"><button type="button" data-action="upload-single" data-target="tiendati.logoSrc">Subir logo</button></div>
       <h3>Fotos</h3>
       ${photosEditor("tiendati.photos", c.tiendati.photos)}
     </section>`;
@@ -307,17 +570,51 @@ function renderTab() {
       ${field("Eyebrow", "reglamento.eyebrow", c.reglamento.eyebrow)}
       ${field("Título", "reglamento.title", c.reglamento.title)}
       ${field("Lead", "reglamento.lead", c.reglamento.lead, true)}
+      ${imagePreview(c.reglamento.pdfUrl)}
       ${field("URL del PDF", "reglamento.pdfUrl", c.reglamento.pdfUrl)}
       ${field("Nombre de descarga", "reglamento.pdfDownloadName", c.reglamento.pdfDownloadName)}
       ${field("Texto botón abrir", "reglamento.openLabel", c.reglamento.openLabel)}
       ${field("Texto botón descargar", "reglamento.downloadLabel", c.reglamento.downloadLabel)}
-      <div class="item-actions"><button type="button" data-action="upload-pdf" data-target="reglamento.pdfUrl">Subir PDF</button></div>
+      <div class="item-actions"><button type="button" data-action="upload-single" data-target="reglamento.pdfUrl" data-folder="docs">Subir PDF</button></div>
       <p class="hint">Podés subir un PDF nuevo; luego guardá los cambios para publicar.</p>
     </section>`;
   }
 
+  if (activeTab === "consultas") {
+    const q = c.consultas ?? {};
+    html = `<section class="panel"><h2>Buzón de consultas</h2>
+      ${field("Eyebrow", "consultas.eyebrow", q.eyebrow)}
+      ${field("Título", "consultas.title", q.title)}
+      ${field("Lead", "consultas.lead", q.lead, true)}
+      ${field("Leyenda de modo", "consultas.modeLegend", q.modeLegend || "¿Cómo querés enviarlo?")}
+      ${field("Etiqueta con datos", "consultas.identifiedLabel", q.identifiedLabel)}
+      ${field("Etiqueta anónimo", "consultas.anonymousLabel", q.anonymousLabel)}
+      ${field("Nota con datos", "consultas.identifiedNote", q.identifiedNote, true)}
+      ${field("Nota anónimo", "consultas.anonymousNote", q.anonymousNote, true)}
+      ${field("Etiqueta tipo", "consultas.topicLabel", q.topicLabel || "Tipo de mensaje")}
+      ${field("Etiqueta nombre", "consultas.nameLabel", q.nameLabel || "Nombre")}
+      ${field("Placeholder nombre", "consultas.namePlaceholder", q.namePlaceholder || "Tu nombre")}
+      ${field("Etiqueta correo", "consultas.emailLabel", q.emailLabel || "Correo (opcional)")}
+      ${field("Placeholder correo", "consultas.emailPlaceholder", q.emailPlaceholder || "para poder responderte")}
+      ${field("Etiqueta mensaje", "consultas.messageLabel", q.messageLabel || "Mensaje")}
+      ${field("Placeholder mensaje", "consultas.messagePlaceholder", q.messagePlaceholder || "", true)}
+      ${field("Texto del botón", "consultas.submitLabel", q.submitLabel)}
+      <h3>Opciones de tema</h3>
+      ${kvListEditor(
+        "consultas.topics",
+        q.topics ?? [],
+        [
+          { key: "value", label: "Valor (enviado)" },
+          { key: "label", label: "Texto visible" },
+        ],
+        "Agregar opción",
+      )}
+      <p class="hint">La estructura del formulario (campos y envío) no se cambia por seguridad. Sí podés editar textos y opciones del menú de tema.</p>
+    </section>`;
+  }
+
   if (activeTab === "footer") {
-    html = `<section class="panel"><h2>Contacto / Footer</h2>
+    html = `<section class="panel"><h2>Contacto / Footer / SEO</h2>
       ${field("Texto institucional", "footer.blurb", c.footer.blurb, true)}
       ${field("Etiqueta contacto", "footer.contactLabel", c.footer.contactLabel)}
       ${field("Correo", "footer.email", c.footer.email)}
@@ -326,19 +623,34 @@ function renderTab() {
       ${field("WhatsApp (texto)", "footer.whatsappDisplay", c.footer.whatsappDisplay)}
       ${field("WhatsApp URL", "footer.whatsappUrl", c.footer.whatsappUrl)}
       ${field("Texto de copyright", "footer.copySuffix", c.footer.copySuffix)}
+      <h3>SEO / Open Graph</h3>
       ${field("Meta título", "meta.title", c.meta.title)}
       ${field("Meta descripción", "meta.description", c.meta.description, true)}
+      ${field("URL del sitio", "meta.siteUrl", c.meta.siteUrl)}
+      ${imagePreview(c.meta.ogImage)}
+      ${field("Imagen OG (URL absoluta o /ruta)", "meta.ogImage", c.meta.ogImage)}
+      <div class="item-actions"><button type="button" data-action="upload-single" data-target="meta.ogImage" data-folder="gallery">Subir imagen OG</button></div>
     </section>`;
+  }
+
+  if (activeTab === "medios") {
+    renderMediaTab().then((mediaHtml) => {
+      if (activeTab === "medios") editor.innerHTML = mediaHtml;
+    });
+    editor.innerHTML = `<section class="panel"><h2>Medios</h2><p class="hint">Cargando…</p></section>`;
+    return;
   }
 
   editor.innerHTML = html;
 }
 
 function syncFromDom() {
+  if (!content) return;
   readFields();
 }
 
 function moveItem(arr, index, dir) {
+  if (!Array.isArray(arr)) return;
   const target = index + dir;
   if (target < 0 || target >= arr.length) return;
   const [item] = arr.splice(index, 1);
@@ -351,7 +663,7 @@ async function api(path, options = {}) {
   if (token) headers.Authorization = `Bearer ${token}`;
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 20000);
+  const timeoutId = setTimeout(() => controller.abort(), 45000);
 
   let response;
   try {
@@ -374,21 +686,76 @@ async function api(path, options = {}) {
   return data;
 }
 
+function ensureNavDefaults() {
+  if (!content.nav) {
+    content.nav = {
+      groups: [
+        {
+          id: "nosotros",
+          label: "Nosotros",
+          links: [
+            { href: "#que-es", label: "Qué es ASEATI" },
+            { href: "#carrera-ati", label: "Qué es ATI" },
+            { href: "#que-hacemos", label: "Qué hacemos" },
+            { href: "#quienes-somos", label: "Quiénes somos" },
+            { href: "#acreditacion", label: "Acreditación" },
+          ],
+        },
+        {
+          id: "iniciativas",
+          label: "Iniciativas",
+          links: [
+            { href: "#remodelacion", label: "Remodelación" },
+            { href: "#tiendati", label: "TIENDATI" },
+            { href: "#fiestas-ati", label: "Fiestas ATI" },
+          ],
+        },
+        {
+          id: "junta",
+          label: "Junta",
+          links: [
+            { href: "#junta", label: "Junta 2026" },
+            { href: "#puestos", label: "Puestos" },
+          ],
+        },
+        {
+          id: "docs",
+          label: "Documentos",
+          links: [{ href: "#reglamento", label: "Reglamento" }],
+        },
+      ],
+      directLinks: [{ href: "#consultas", label: "Consultas" }],
+    };
+  }
+  if (!content.consultas) content.consultas = {};
+  if (!Array.isArray(content.consultas.topics) || !content.consultas.topics.length) {
+    content.consultas.topics = [
+      { value: "Consulta", label: "Consulta" },
+      { value: "Inquietud", label: "Inquietud" },
+      { value: "Situación", label: "Situación" },
+      { value: "Sugerencia", label: "Sugerencia" },
+      { value: "Otro", label: "Otro" },
+    ];
+  }
+}
+
 async function loadContent() {
-  // Prefer static JSON for speed; then refresh SHA from API when available.
   const staticRes = await fetch("/data/site.json", { cache: "no-store" });
   if (!staticRes.ok) throw new Error("No se pudo cargar el contenido.");
   content = await staticRes.json();
+  ensureNavDefaults();
   renderTab();
 
   try {
     const data = await api("/api/content");
     if (data?.content) content = data.content;
     if (data?.sha) sessionStorage.setItem(SHA_KEY, data.sha);
+    ensureNavDefaults();
     renderTab();
   } catch {
     // Keep static content; saving will still try GitHub and report errors.
   }
+  clearDirty();
 }
 
 function showApp() {
@@ -468,7 +835,12 @@ saveBtn.addEventListener("click", async () => {
       }),
     });
     if (data.sha) sessionStorage.setItem(SHA_KEY, data.sha);
-    setStatus(data.message || "Guardado.", "ok");
+    clearDirty();
+    setStatus(
+      data.message ||
+        "Guardado. El sitio público puede tardar 1–2 minutos en actualizarse.",
+      "ok",
+    );
   } catch (error) {
     setStatus(error.message, "err");
   }
@@ -476,6 +848,7 @@ saveBtn.addEventListener("click", async () => {
 
 document.querySelectorAll("[data-tab]").forEach((btn) => {
   btn.addEventListener("click", () => {
+    if (dirty && !confirm("Hay cambios sin guardar en esta pestaña. ¿Continuar igual?")) return;
     syncFromDom();
     activeTab = btn.getAttribute("data-tab");
     document.querySelectorAll("[data-tab]").forEach((b) => b.classList.toggle("active", b === btn));
@@ -483,87 +856,118 @@ document.querySelectorAll("[data-tab]").forEach((btn) => {
   });
 });
 
+editor.addEventListener("input", () => markDirty());
+editor.addEventListener("change", () => markDirty());
+
 editor.addEventListener("click", async (event) => {
-  const button = event.target.closest("button[data-action]");
-  if (!button) return;
+  const button = event.target.closest("button[data-action], a[data-action]");
+  if (!button || !button.getAttribute("data-action")) return;
   const action = button.getAttribute("data-action");
   syncFromDom();
 
   const item = button.closest(".item");
   const index = item ? Number(item.getAttribute("data-index")) : -1;
+  const listRoot = button.closest("[data-list]");
+  const base = listRoot?.getAttribute("data-base") || button.closest("[data-base]")?.getAttribute("data-base");
+
+  if (action === "refresh-media") {
+    renderTab();
+    return;
+  }
+
+  if (action === "copy-url") {
+    const url = button.getAttribute("data-url");
+    try {
+      await navigator.clipboard.writeText(url);
+      setStatus(`Ruta copiada: ${url}`, "ok");
+    } catch {
+      setStatus(`Copiá manualmente: ${url}`, "ok");
+    }
+    return;
+  }
+
+  if (action === "delete-media") {
+    const path = button.getAttribute("data-path");
+    if (!confirm(`¿Eliminar del repositorio?\n${path}`)) return;
+    try {
+      setStatus("Eliminando archivo…");
+      const result = await api("/api/media", {
+        method: "DELETE",
+        body: JSON.stringify({ path }),
+      });
+      setStatus(result.message || "Archivo eliminado.", "ok");
+      renderTab();
+    } catch (error) {
+      setStatus(error.message, "err");
+    }
+    return;
+  }
 
   if (action === "add-paragraph") {
-    const base = button.closest("[data-base]")?.getAttribute("data-base");
-    if (base === "queEs.paragraphs") content.queEs.paragraphs.push("");
-    if (base === "quienesSomos.paragraphs") content.quienesSomos.paragraphs.push("");
+    ensureArray(base).push("");
+    markDirty();
   }
-  if (action === "add-feature") content.queHacemos.features.push({ title: "", text: "" });
-  if (action === "add-role") content.puestos.roles.push({ title: "", text: "" });
-  if (action === "add-member") content.junta.members.push({ name: "", role: "" });
+
   if (action === "add-photo") {
-    const base = button.closest("[data-base]")?.getAttribute("data-base");
-    const empty = { src: "", alt: "", className: "" };
-    if (base === "queHacemos.photos") content.queHacemos.photos.push(empty);
-    if (base === "quienesSomos.photos") content.quienesSomos.photos.push({ src: "", alt: "" });
-    if (base === "tiendati.photos") content.tiendati.photos.push({ src: "", alt: "" });
-  }
-  if (action === "add-step") {
-    content.remodelacion.steps.push({ src: "", alt: "", caption: "" });
+    const empty = base?.includes("queHacemos") || base?.includes("fiestasAti")
+      ? { src: "", alt: "", className: "" }
+      : { src: "", alt: "" };
+    ensureArray(base).push(empty);
+    markDirty();
   }
 
-  if (action === "remove" && index >= 0) {
+  if (action === "add-kv") {
+    let empty = {};
+    try {
+      empty = JSON.parse(button.getAttribute("data-empty") || "{}");
+    } catch {
+      empty = {};
+    }
+    ensureArray(base).push(empty);
+    markDirty();
+  }
+
+  if (action === "remove" && index >= 0 && base) {
     if (!confirm("¿Eliminar este elemento?")) return;
-    const list = button.closest("[data-list]")?.getAttribute("data-list");
-    const base = button.closest("[data-base]")?.getAttribute("data-base");
-    if (list === "paragraphs" && base === "queEs.paragraphs") content.queEs.paragraphs.splice(index, 1);
-    if (list === "paragraphs" && base === "quienesSomos.paragraphs") content.quienesSomos.paragraphs.splice(index, 1);
-    if (list === "features") content.queHacemos.features.splice(index, 1);
-    if (list === "roles") content.puestos.roles.splice(index, 1);
-    if (list === "members") content.junta.members.splice(index, 1);
-    if (list === "photos" && base === "queHacemos.photos") content.queHacemos.photos.splice(index, 1);
-    if (list === "photos" && base === "quienesSomos.photos") content.quienesSomos.photos.splice(index, 1);
-    if (list === "photos" && base === "tiendati.photos") content.tiendati.photos.splice(index, 1);
-    if (list === "steps") content.remodelacion.steps.splice(index, 1);
+    ensureArray(base).splice(index, 1);
+    markDirty();
   }
 
-  if ((action === "up" || action === "down") && index >= 0) {
-    const dir = action === "up" ? -1 : 1;
-    const list = button.closest("[data-list]")?.getAttribute("data-list");
-    const base = button.closest("[data-base]")?.getAttribute("data-base");
-    if (list === "paragraphs" && base === "queEs.paragraphs") moveItem(content.queEs.paragraphs, index, dir);
-    if (list === "paragraphs" && base === "quienesSomos.paragraphs") moveItem(content.quienesSomos.paragraphs, index, dir);
-    if (list === "features") moveItem(content.queHacemos.features, index, dir);
-    if (list === "roles") moveItem(content.puestos.roles, index, dir);
-    if (list === "members") moveItem(content.junta.members, index, dir);
-    if (list === "photos" && base === "queHacemos.photos") moveItem(content.queHacemos.photos, index, dir);
-    if (list === "photos" && base === "quienesSomos.photos") moveItem(content.quienesSomos.photos, index, dir);
-    if (list === "photos" && base === "tiendati.photos") moveItem(content.tiendati.photos, index, dir);
-    if (list === "steps") moveItem(content.remodelacion.steps, index, dir);
+  if ((action === "up" || action === "down") && index >= 0 && base) {
+    moveItem(ensureArray(base), index, action === "up" ? -1 : 1);
+    markDirty();
   }
 
-  if (action === "upload" || action === "upload-remodel" || action === "upload-single" || action === "upload-pdf") {
+  if (action === "upload" || action === "upload-single") {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = action === "upload-pdf" ? "application/pdf" : "image/*";
+    const folder =
+      button.getAttribute("data-folder") ||
+      listRoot?.getAttribute("data-folder") ||
+      FOLDER_BY_TARGET[button.getAttribute("data-target")] ||
+      "gallery";
+    input.accept = folder === "docs" ? "application/pdf" : "image/*";
     input.onchange = async () => {
       const file = input.files?.[0];
       if (!file) return;
       try {
         setStatus("Subiendo archivo…");
-        const folder = action === "upload-remodel" ? "remodelacion" : "gallery";
         const result = await uploadFile(file, folder);
-        if (action === "upload-single" || action === "upload-pdf") {
+        if (action === "upload-single") {
           const target = button.getAttribute("data-target");
-          setPath(content, target, result.url);
-        } else if (action === "upload" && index >= 0) {
-          const base = button.closest("[data-base]")?.getAttribute("data-base");
-          if (base === "queHacemos.photos") content.queHacemos.photos[index].src = result.url;
-          if (base === "quienesSomos.photos") content.quienesSomos.photos[index].src = result.url;
-          if (base === "tiendati.photos") content.tiendati.photos[index].src = result.url;
-        } else if (action === "upload-remodel" && index >= 0) {
-          content.remodelacion.steps[index].src = result.url;
+          let url = result.url;
+          if (target === "meta.ogImage" && url.startsWith("/")) {
+            const origin = (content.meta?.siteUrl || window.location.origin).replace(/\/$/, "");
+            url = `${origin}${url}`;
+          }
+          setPath(content, target, url);
+        } else if (action === "upload" && index >= 0 && base) {
+          const arr = ensureArray(base);
+          if (!arr[index]) arr[index] = {};
+          arr[index].src = result.url;
         }
-        setStatus(result.message || "Archivo subido.", "ok");
+        markDirty();
+        setStatus(result.message || "Archivo subido. Guardá los cambios.", "ok");
         renderTab();
       } catch (error) {
         setStatus(error.message, "err");

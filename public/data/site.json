@@ -1,7 +1,87 @@
 {
   "meta": {
     "title": "ASEATI | Asociación de Estudiantes de ATI",
-    "description": "ASEATI: la asociación estudiantil que representa a la comunidad de Administración de Tecnología de Información del TEC."
+    "description": "ASEATI: la asociación estudiantil que representa a la comunidad de Administración de Tecnología de Información del TEC.",
+    "siteUrl": "https://aseati.com/",
+    "ogImage": "https://aseati.com/og-image.png?v=2"
+  },
+  "nav": {
+    "groups": [
+      {
+        "id": "nosotros",
+        "label": "Nosotros",
+        "links": [
+          {
+            "href": "#que-es",
+            "label": "Qué es ASEATI"
+          },
+          {
+            "href": "#carrera-ati",
+            "label": "Qué es ATI"
+          },
+          {
+            "href": "#que-hacemos",
+            "label": "Qué hacemos"
+          },
+          {
+            "href": "#quienes-somos",
+            "label": "Quiénes somos"
+          },
+          {
+            "href": "#acreditacion",
+            "label": "Acreditación"
+          }
+        ]
+      },
+      {
+        "id": "iniciativas",
+        "label": "Iniciativas",
+        "links": [
+          {
+            "href": "#remodelacion",
+            "label": "Remodelación"
+          },
+          {
+            "href": "#tiendati",
+            "label": "TIENDATI"
+          },
+          {
+            "href": "#fiestas-ati",
+            "label": "Fiestas ATI"
+          }
+        ]
+      },
+      {
+        "id": "junta",
+        "label": "Junta",
+        "links": [
+          {
+            "href": "#junta",
+            "label": "Junta 2026"
+          },
+          {
+            "href": "#puestos",
+            "label": "Puestos"
+          }
+        ]
+      },
+      {
+        "id": "docs",
+        "label": "Documentos",
+        "links": [
+          {
+            "href": "#reglamento",
+            "label": "Reglamento"
+          }
+        ]
+      }
+    ],
+    "directLinks": [
+      {
+        "href": "#consultas",
+        "label": "Consultas"
+      }
+    ]
   },
   "hero": {
     "logoSrc": "/logo-aseati.png",
@@ -30,6 +110,138 @@
       "alt": "Bienvenida a una nueva generación de ATI en el TEC",
       "caption": "Bienvenida a nuevas generaciones de ATI"
     }
+  },
+  "carreraAti": {
+    "eyebrow": "La carrera",
+    "title": "Qué es ATI",
+    "lead": "Administración de Tecnología de Información forma profesionales híbridos: dominio técnico con mirada de negocio para decidir, optimizar e innovar procesos en las organizaciones.",
+    "paragraphs": [
+      "ATI responde a una necesidad clara del mercado: personas que no solo programan o conocen infraestructura, sino que entienden cómo opera una empresa y cómo la tecnología puede hacerla más competitiva. Se forma en computación con un foco concreto: mejorar procesos operativos y de negocio, tanto en compañías tecnológicas como en organizaciones tradicionales que se están digitalizando."
+    ],
+    "roleTitle": "El rol: intérprete-negociador",
+    "roleText": "La fortaleza de un ATI es conectar dos mundos. Habla con equipos técnicos —desarrollo, infraestructura, requerimientos, seguridad— y también con gestión: arquitectura de negocio, dirección de TI y administración de proyectos. Así la tecnología deja de ser un fin en sí mismo y se vuelve vehículo de los objetivos de la empresa.",
+    "facts": [
+      {
+        "value": "Licenciatura",
+        "label": "Administrador(a) en Tecnologías de Información"
+      },
+      {
+        "value": "Cartago",
+        "label": "Campus Tecnológico Central · Escuela de ATI"
+      },
+      {
+        "value": "10 semestres",
+        "label": "Incluye Semestre 0 de nivelación"
+      },
+      {
+        "value": "Doble mirada",
+        "label": "Formación técnica + administrativa"
+      }
+    ],
+    "planTitle": "Qué estudiarás",
+    "planLead": "El plan une bloques que se refuerzan entre sí a lo largo de la carrera, hasta el Trabajo Final de Graduación en el décimo semestre.",
+    "planAreas": [
+      {
+        "title": "Fundamentos cuantitativos",
+        "text": "Matemática, cálculo, estadística y modelos para evaluar escenarios y tomar decisiones con criterio."
+      },
+      {
+        "title": "Tecnología e ingeniería de software",
+        "text": "Programación, algoritmos, arquitectura, bases de datos, redes y seguridad en sistemas de información."
+      },
+      {
+        "title": "Negocios y finanzas",
+        "text": "Contabilidad, economía, costos, presupuesto, mercadeo digital y negocios electrónicos."
+      },
+      {
+        "title": "Proyectos, liderazgo y calidad",
+        "text": "Administración de proyectos, comportamiento organizacional, logística, inteligencia de negocios y planificación estratégica de TI."
+      },
+      {
+        "title": "Ética, derecho y sociedad",
+        "text": "Computación y sociedad, ética para la ingeniería, derecho laboral e informático para implementar con responsabilidad."
+      }
+    ],
+    "careersTitle": "Dónde podrás trabajar",
+    "careersLead": "Esa formación dual abre roles de liderazgo y análisis muy demandados en Costa Rica y en el mercado global.",
+    "careers": [
+      {
+        "title": "IT Project Manager",
+        "text": "Liderás implementación de tecnología con presupuesto, cronograma y requerimientos claros."
+      },
+      {
+        "title": "Scrum Master / liderazgo ágil",
+        "text": "Facilitás equipos de desarrollo, removés obstáculos y asegurás entrega continua de valor."
+      },
+      {
+        "title": "Business / Process Analyst",
+        "text": "Traducís necesidades del negocio a soluciones técnicas e identificás oportunidades de automatización."
+      },
+      {
+        "title": "Analista de datos / BI",
+        "text": "Convertís datos en paneles y reportes que guían decisiones financieras y operativas."
+      },
+      {
+        "title": "Arquitectura y consultoría de TI",
+        "text": "Diseñás estructura tecnológica, calidad de software y servicios que sostengan las metas de largo plazo."
+      }
+    ],
+    "ctaLabel": "Ver la carrera en el TEC",
+    "ctaHref": "https://www.tec.ac.cr/licenciatura-administracion-tecnologias-informacion"
+  },
+  "acreditacion": {
+    "eyebrow": "Calidad académica",
+    "title": "Acreditación SINAES",
+    "lead": "La licenciatura en Administración de Tecnología de Información del TEC vuelve a acreditarse con el SINAES: un sello oficial de calidad que respalda tu formación.",
+    "stats": [
+      {
+        "value": "3.ª",
+        "label": "Acreditación consecutiva"
+      },
+      {
+        "value": "2026–2030",
+        "label": "Vigencia actual"
+      },
+      {
+        "value": "11 años",
+        "label": "Con sello SINAES"
+      },
+      {
+        "value": "~473",
+        "label": "Estudiantes activos"
+      }
+    ],
+    "paragraphs": [
+      "ATI mantiene de forma ininterrumpida el sello oficial de calidad del Sistema Nacional de Acreditación de la Educación Superior (SINAES) desde 2015. La primera acreditación fue en 2015, la segunda en 2021 y esta tercera cubre el periodo 2026–2030.",
+      "La ceremonia de entrega de certificaciones se realizó el 13 de mayo en el auditorio del Centro de las Artes del TEC. El logro refleja el trabajo articulado entre docencia, investigación y extensión, y el compromiso de la Escuela con la mejora continua y la formación de profesionales pertinentes para la transformación digital.",
+      "Para la comunidad estudiantil, la acreditación no es un símbolo abstracto: significa que la carrera ha sido evaluada por expertos independientes y cumple con altos estándares académicos nacionales, fortaleciendo la confianza de la sociedad en quienes egresan de ATI."
+    ],
+    "quote": {
+      "text": "Significa que cuando mañana salgamos al mercado laboral —en un campo tan dinámico y exigente como el de un ATI—, lo haremos con la certeza de que nuestra preparación está respaldada por un sello de calidad oficial.",
+      "author": "Alejandro Vega Gamboa",
+      "role": "Estudiante de ATI"
+    },
+    "photos": [
+      {
+        "src": "/gallery/acreditacion/discurso.jpg",
+        "alt": "Estudiante de ATI en el podio durante la ceremonia de acreditación SINAES en el TEC"
+      },
+      {
+        "src": "/gallery/acreditacion/certificados.jpg",
+        "alt": "Entrega de certificados de acreditación SINAES a la carrera de ATI en el Centro de las Artes"
+      }
+    ],
+    "linksLabel": "Más información y noticias",
+    "links": [
+      {
+        "label": "Noticia del TEC: ATI se acredita una vez más con el SINAES",
+        "href": "https://www.tec.ac.cr/licenciatura-ingenieria-ambiental-administracion-tecnologia-informacion-se-acreditan-vez-mas-sinaes"
+      },
+      {
+        "label": "Noticia del SINAES: certificado oficial de calidad",
+        "href": "https://www.sinaes.ac.cr/dos-carreras-del-tec-recibieron-de-nuevo-un-certificado-oficial-de-calidad-del-sinaes/"
+      }
+    ]
   },
   "queHacemos": {
     "eyebrow": "En la práctica",
@@ -84,8 +296,40 @@
       }
     ]
   },
+  "fiestasAti": {
+    "eyebrow": "Vida universitaria",
+    "title": "Fiestas ATI",
+    "lead": "Entre estudiantes del TEC, las Fiestas ATI son un referente: encuentros con mucha energía, buena producción y una comunidad que se hace sentir.",
+    "paragraphs": [
+      "Organizamos eventos sociales que reúnen a ATI y a amistades de otras carreras. Son parte de la cultura estudiantil de la Asociación: música, ambiente y espacios para conectar fuera del aula.",
+      "Nos importa que se vivan con respeto y sentido de comunidad. Buscamos producción cuidada, identidad propia y esa reputación de hacer algunas de las mejores fiestas universitarias del TEC, cuidando siempre la imagen de ASEATI y de quienes nos acompañan."
+    ],
+    "note": "Priorizamos la convivencia responsable y un buen ambiente para toda la comunidad.",
+    "photos": [
+      {
+        "src": "/gallery/fiestas/publico.jpg",
+        "alt": "Vista desde la cabina del DJ hacia el público en una Fiesta ATI",
+        "className": "mosaic-tall"
+      },
+      {
+        "src": "/gallery/fiestas/pantalla.jpg",
+        "alt": "Público frente a la pantalla en una Fiesta ATI",
+        "className": ""
+      },
+      {
+        "src": "/gallery/fiestas/dj-energia.jpg",
+        "alt": "DJ animando una Fiesta ATI",
+        "className": ""
+      },
+      {
+        "src": "/gallery/fiestas/dj-setup.jpg",
+        "alt": "Producción DJ en una Fiesta ATI",
+        "className": "mosaic-wide"
+      }
+    ]
+  },
   "quienesSomos": {
-    "eyebrow": "Comunidad",
+    "eyebrow": "La comunidad",
     "title": "Quiénes somos",
     "lead": "ASEATI no es solo la Junta Directiva. Si estás estudiando ATI y estás matriculado de forma regular, ya formás parte de la Asociación.",
     "paragraphs": [
@@ -108,9 +352,22 @@
     ]
   },
   "puestos": {
-    "eyebrow": "Cada año",
+    "eyebrow": "Involúcrate",
     "title": "Puestos de la Junta Directiva",
-    "lead": "Estos son los cargos que se ofertan para conformar la Junta. Si te interesa liderar o apoyar, acá tenés una idea clara de cada rol.",
+    "lead": "Las Asambleas Generales de Estudiantes se realizan dos veces al año (una por semestre) para someter a votación los puestos vacantes de la Junta Directiva. Cualquier persona que cumpla los requisitos puede postularse.",
+    "intro": "Si te interesa liderar o apoyar a la comunidad de ATI, estos son los cargos que se ofertan y las condiciones para participar en el proceso.",
+    "requirementsTitle": "Requisitos para postularse",
+    "requirements": [
+      "Ser miembro activo de la Asociación (estudiante activo de ATI).",
+      "No tener sanciones vigentes impuestas por la Federación de Estudiantes del Instituto Tecnológico de Costa Rica (FEITEC) ni por el Instituto Tecnológico de Costa Rica.",
+      "No formar parte, al momento de la elección, del Tribunal Jurisdiccional, del Tribunal Electoral Estudiantil ni del Consejo Ejecutivo de la FEITEC.",
+      "No ocupar cargos dentro de la Fiscalía de la Asociación.",
+      "Cumplir con los requisitos y disposiciones establecidos en el Estatuto Orgánico de la FEITEC y demás normativa federativa aplicable.",
+      "Ser mayor de edad.",
+      "No desempeñar, al momento de la elección, cargos docentes o administrativos en el Instituto Tecnológico de Costa Rica."
+    ],
+    "noteHtml": "Para más detalle sobre el funcionamiento de ASEATI, consultá el <a href=\"#reglamento\">Reglamento interno</a>.",
+    "rolesTitle": "Cargos que se ofertan",
     "roles": [
       {
         "title": "Presidencia",
@@ -235,17 +492,17 @@
     "note": "También vas a encontrar merch y detalles creados con cariño por la comunidad, como tote bags con identidad ATI. Pasá a visitarnos cuando estés por la asociación.",
     "photos": [
       {
-        "src": "/gallery/tiendati-tote.jpg",
-        "alt": "Tote bag con diseño ati frente al edificio de la carrera"
+        "src": "/gallery/tiendati-estantes.jpg",
+        "alt": "Estantes de TIENDATI con snacks, bebidas y productos para estudiantes"
       },
       {
-        "src": "/gallery/tiendati-taller.jpg",
-        "alt": "Taller creativo de tote bags organizado con la comunidad"
+        "src": "/gallery/tiendati-refrigerador.jpg",
+        "alt": "Refrigerador de TIENDATI con helados, refrescos y bebidas frías"
       }
     ]
   },
   "remodelacion": {
-    "eyebrow": "2025 – 2026",
+    "eyebrow": "Proyectos e iniciativas",
     "title": "Remodelación de la ASEATI",
     "lead": "Así fue el proceso de transformar el espacio de la asociación: desde el antes hasta el resultado final en blanco y gris.",
     "steps": [
@@ -324,6 +581,46 @@
     "pdfDownloadName": "Reglamento-Interno-ASEATI-2026.pdf",
     "openLabel": "Abrir PDF",
     "downloadLabel": "Descargar"
+  },
+  "consultas": {
+    "eyebrow": "Te escuchamos",
+    "title": "Buzón de consultas",
+    "lead": "Si tenés una consulta, inquietud, situación o sugerencia, podés escribirnos con tus datos o de forma anónima. El mensaje llega a ASEATI.",
+    "identifiedLabel": "Con mis datos",
+    "anonymousLabel": "Anónimo",
+    "identifiedNote": "Usaremos tu nombre y correo solo para entender el caso y responderte, si dejás un medio de contacto.",
+    "anonymousNote": "En modo anónimo no pedimos tu nombre. El correo queda opcional, solo si querés que te podamos responder.",
+    "submitLabel": "Enviar a ASEATI",
+    "modeLegend": "¿Cómo querés enviarlo?",
+    "topicLabel": "Tipo de mensaje",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Tu nombre",
+    "emailLabel": "Correo (opcional)",
+    "emailPlaceholder": "para poder responderte",
+    "messageLabel": "Mensaje",
+    "messagePlaceholder": "Contanos qué necesitás, con el detalle que te sientas cómodo o cómoda de compartir.",
+    "topics": [
+      {
+        "value": "Consulta",
+        "label": "Consulta"
+      },
+      {
+        "value": "Inquietud",
+        "label": "Inquietud"
+      },
+      {
+        "value": "Situación",
+        "label": "Situación"
+      },
+      {
+        "value": "Sugerencia",
+        "label": "Sugerencia"
+      },
+      {
+        "value": "Otro",
+        "label": "Otro"
+      }
+    ]
   },
   "footer": {
     "blurb": "Asociación de Estudiantes de Administración de Tecnología de Información · TEC · Adscrita a FEITEC",

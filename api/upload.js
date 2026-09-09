@@ -7,6 +7,18 @@ import {
   verifyToken,
 } from "./_lib.js";
 
+const ALLOWED_FOLDERS = new Set([
+  "gallery",
+  "gallery/fiestas",
+  "gallery/acreditacion",
+  "gallery/remodelacion",
+  "gallery/junta",
+  "gallery/que-hacemos",
+  "gallery/quienes",
+  "gallery/tiendati",
+  "docs",
+]);
+
 function sanitizeName(name) {
   return String(name || "upload")
     .toLowerCase()
@@ -14,6 +26,17 @@ function sanitizeName(name) {
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 80);
+}
+
+function resolveFolder(rawFolder, mime) {
+  if (mime === "application/pdf") return "docs";
+  const folder = String(rawFolder || "gallery")
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/^public\//, "");
+  // Back-compat: "remodelacion" → gallery/remodelacion
+  if (folder === "remodelacion") return "gallery/remodelacion";
+  if (ALLOWED_FOLDERS.has(folder)) return folder;
+  return "gallery";
 }
 
 export default async function handler(req, res) {
@@ -31,7 +54,6 @@ export default async function handler(req, res) {
     const body = await readBody(req);
     const dataUrl = body?.dataUrl;
     const filename = sanitizeName(body?.filename || `upload-${Date.now()}.jpg`);
-    const folder = body?.folder === "remodelacion" ? "gallery/remodelacion" : "gallery";
 
     if (!dataUrl || typeof dataUrl !== "string" || !dataUrl.startsWith("data:")) {
       return json(res, 400, { error: "Archivo inválido." });
@@ -46,11 +68,11 @@ export default async function handler(req, res) {
     }
 
     const base64 = match[2];
-    // ~4.5MB limit decoded approx
     if (base64.length > 6_000_000) {
       return json(res, 400, { error: "El archivo es demasiado grande (máx. ~4 MB)." });
     }
 
+    const folder = resolveFolder(body?.folder, mime);
     const extFromMime =
       mime === "image/png"
         ? "png"
@@ -60,7 +82,7 @@ export default async function handler(req, res) {
             ? "pdf"
             : "jpg";
     const finalName = filename.includes(".") ? filename : `${filename}.${extFromMime}`;
-    const path = mime === "application/pdf" ? `public/docs/${finalName}` : `public/${folder}/${finalName}`;
+    const path = `public/${folder}/${finalName}`;
 
     let sha;
     try {
@@ -81,8 +103,10 @@ export default async function handler(req, res) {
     return json(res, 200, {
       ok: true,
       url: publicUrl,
+      path,
+      folder,
       sha: result.content?.sha,
-      message: "Archivo subido. Guardá el contenido para asociarlo al sitio.",
+      message: `Archivo en ${publicUrl}. Guardá los cambios para asociarlo al sitio.`,
     });
   } catch (error) {
     return json(res, 500, { error: error.message || "No se pudo subir el archivo." });

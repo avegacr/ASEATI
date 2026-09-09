@@ -14,13 +14,36 @@
       name="description"
       content="ASEATI: la asociación estudiantil que representa a la comunidad de Administración de Tecnología de Información del TEC."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
     <title>ASEATI | Asociación de Estudiantes de ATI</title>
+    <link rel="canonical" href="https://aseati.com/" />
+
+    <!-- Open Graph / WhatsApp / Instagram / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CR" />
+    <meta property="og:site_name" content="ASEATI" />
+    <meta property="og:url" content="https://aseati.com/" />
+    <meta property="og:title" content="ASEATI | Asociación de Estudiantes de ATI" />
+    <meta
+      property="og:description"
+      content="ASEATI: la asociación estudiantil que representa a la comunidad de Administración de Tecnología de Información del TEC."
+    />
+    <meta property="og:image" content="https://aseati.com/og-image.png?v=2" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Logo de ASEATI, Asociación de Estudiantes de ATI del Tecnológico de Costa Rica"
+    />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ASEATI | Asociación de Estudiantes de ATI" />
+    <meta
+      name="twitter:description"
+      content="ASEATI: la asociación estudiantil que representa a la comunidad de Administración de Tecnología de Información del TEC."
+    />
+    <meta name="twitter:image" content="https://aseati.com/og-image.png?v=2" />
   </head>
   <body>
     <div class="bg-atmosphere" aria-hidden="true"></div>
@@ -31,7 +54,7 @@
 
     <header class="site-header">
       <a class="brand" href="#inicio">
-        <img src="/logo-aseati.png" alt="ASEATI" width="160" height="70" />
+        <img class="brand-logo" src="/logo-aseati.png" alt="ASEATI" width="160" height="70" />
       </a>
       <button
         class="nav-toggle"
@@ -44,19 +67,75 @@
         <span></span>
       </button>
       <nav id="site-nav" class="site-nav" aria-label="Principal">
-        <a href="#que-es">Qué es</a>
-        <a href="#que-hacemos">Qué hacemos</a>
-        <a href="#quienes-somos">Quiénes somos</a>
-        <a href="#puestos">Puestos</a>
-        <a href="#junta">Junta 2026</a>
-        <a href="#tiendati">TIENDATI</a>
-        <a href="#remodelacion">Remodelación</a>
-        <a href="#reglamento">Reglamento</a>
+        <div class="nav-group">
+          <button
+            type="button"
+            class="nav-group-toggle"
+            aria-expanded="false"
+            aria-controls="nav-nosotros"
+          >
+            Nosotros
+          </button>
+          <div id="nav-nosotros" class="nav-submenu" role="group" hidden>
+            <a href="#que-es">Qué es ASEATI</a>
+            <a href="#carrera-ati">Qué es ATI</a>
+            <a href="#que-hacemos">Qué hacemos</a>
+            <a href="#quienes-somos">Quiénes somos</a>
+            <a href="#acreditacion">Acreditación</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button
+            type="button"
+            class="nav-group-toggle"
+            aria-expanded="false"
+            aria-controls="nav-vida"
+          >
+            Iniciativas
+          </button>
+          <div id="nav-vida" class="nav-submenu" role="group" hidden>
+            <a href="#remodelacion">Remodelación</a>
+            <a href="#tiendati">TIENDATI</a>
+            <a href="#fiestas-ati">Fiestas ATI</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button
+            type="button"
+            class="nav-group-toggle"
+            aria-expanded="false"
+            aria-controls="nav-junta"
+          >
+            Junta
+          </button>
+          <div id="nav-junta" class="nav-submenu" role="group" hidden>
+            <a href="#junta">Junta 2026</a>
+            <a href="#puestos">Puestos</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button
+            type="button"
+            class="nav-group-toggle"
+            aria-expanded="false"
+            aria-controls="nav-docs"
+          >
+            Documentos
+          </button>
+          <div id="nav-docs" class="nav-submenu" role="group" hidden>
+            <a href="#reglamento">Reglamento</a>
+          </div>
+        </div>
+
+        <a class="nav-link-direct" href="#consultas">Consultas</a>
       </nav>
     </header>
 
     <main>
-      <section id="inicio" class="hero">
+<section id="inicio" class="hero">
         <div class="hero-copy">
           <img
             class="hero-logo"
@@ -81,7 +160,7 @@
         </div>
       </section>
 
-      <section id="que-es" class="section">
+<section id="que-es" class="section">
         <div class="section-inner section-split">
           <div>
             <p class="eyebrow">Sobre nosotros</p>
@@ -120,7 +199,163 @@
         </div>
       </section>
 
-      <section id="que-hacemos" class="section section-alt">
+<section id="carrera-ati" class="section section-alt">
+        <div class="section-inner">
+          <p class="eyebrow">La carrera</p>
+          <h2>Qué es ATI</h2>
+          <p class="section-lead">
+            Administración de Tecnología de Información forma profesionales
+            híbridos: dominio técnico con mirada de negocio para decidir,
+            optimizar e innovar procesos en las organizaciones.
+          </p>
+
+          <div class="prose">
+            <p>
+              ATI responde a una necesidad clara del mercado: personas que no
+              solo programan o conocen infraestructura, sino que entienden cómo
+              opera una empresa y cómo la tecnología puede hacerla más
+              competitiva. Se forma en computación con un foco concreto:
+              mejorar procesos operativos y de negocio, tanto en compañías
+              tecnológicas como en organizaciones tradicionales que se están
+              digitalizando.
+            </p>
+          </div>
+
+          <aside class="ati-role" aria-label="Rol del profesional ATI">
+            <h3>El rol: intérprete-negociador</h3>
+            <p>
+              La fortaleza de un ATI es conectar dos mundos. Habla con equipos
+              técnicos —desarrollo, infraestructura, requerimientos, seguridad—
+              y también con gestión: arquitectura de negocio, dirección de TI y
+              administración de proyectos. Así la tecnología deja de ser un fin
+              en sí mismo y se vuelve vehículo de los objetivos de la empresa.
+            </p>
+          </aside>
+
+          <ul class="ati-facts" aria-label="Datos clave de la carrera">
+            <li>
+              <strong>Licenciatura</strong>
+              <span>Administrador(a) en Tecnologías de Información</span>
+            </li>
+            <li>
+              <strong>Cartago</strong>
+              <span>Campus Tecnológico Central · Escuela de ATI</span>
+            </li>
+            <li>
+              <strong>10 semestres</strong>
+              <span>Incluye Semestre 0 de nivelación</span>
+            </li>
+            <li>
+              <strong>Doble mirada</strong>
+              <span>Formación técnica + administrativa</span>
+            </li>
+          </ul>
+
+          <div class="ati-block">
+            <h3 data-ati="plan-title">Qué estudiarás</h3>
+            <p class="ati-block-lead" data-ati="plan-lead">
+              El plan une bloques que se refuerzan entre sí a lo largo de la
+              carrera, hasta el Trabajo Final de Graduación en el décimo
+              semestre.
+            </p>
+            <ul class="feature-list" data-ati="plan-list">
+              <li>
+                <strong>Fundamentos cuantitativos</strong>
+                <span
+                  >Matemática, cálculo, estadística y modelos para evaluar
+                  escenarios y tomar decisiones con criterio.</span
+                >
+              </li>
+              <li>
+                <strong>Tecnología e ingeniería de software</strong>
+                <span
+                  >Programación, algoritmos, arquitectura, bases de datos,
+                  redes y seguridad en sistemas de información.</span
+                >
+              </li>
+              <li>
+                <strong>Negocios y finanzas</strong>
+                <span
+                  >Contabilidad, economía, costos, presupuesto, mercadeo
+                  digital y negocios electrónicos.</span
+                >
+              </li>
+              <li>
+                <strong>Proyectos, liderazgo y calidad</strong>
+                <span
+                  >Administración de proyectos, comportamiento organizacional,
+                  logística, inteligencia de negocios y planificación
+                  estratégica de TI.</span
+                >
+              </li>
+              <li>
+                <strong>Ética, derecho y sociedad</strong>
+                <span
+                  >Computación y sociedad, ética para la ingeniería, derecho
+                  laboral e informático para implementar con responsabilidad.</span
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div class="ati-block">
+            <h3 data-ati="careers-title">Dónde podrás trabajar</h3>
+            <p class="ati-block-lead" data-ati="careers-lead">
+              Esa formación dual abre roles de liderazgo y análisis muy
+              demandados en Costa Rica y en el mercado global.
+            </p>
+            <ul class="feature-list" data-ati="careers-list">
+              <li>
+                <strong>IT Project Manager</strong>
+                <span
+                  >Liderás implementación de tecnología con presupuesto,
+                  cronograma y requerimientos claros.</span
+                >
+              </li>
+              <li>
+                <strong>Scrum Master / liderazgo ágil</strong>
+                <span
+                  >Facilitás equipos de desarrollo, removés obstáculos y
+                  asegurás entrega continua de valor.</span
+                >
+              </li>
+              <li>
+                <strong>Business / Process Analyst</strong>
+                <span
+                  >Traducís necesidades del negocio a soluciones técnicas e
+                  identificás oportunidades de automatización.</span
+                >
+              </li>
+              <li>
+                <strong>Analista de datos / BI</strong>
+                <span
+                  >Convertís datos en paneles y reportes que guían decisiones
+                  financieras y operativas.</span
+                >
+              </li>
+              <li>
+                <strong>Arquitectura y consultoría de TI</strong>
+                <span
+                  >Diseñás estructura tecnológica, calidad de software y
+                  servicios que sostengan las metas de largo plazo.</span
+                >
+              </li>
+            </ul>
+          </div>
+
+          <p class="ati-cta-wrap">
+            <a
+              class="btn btn-secondary"
+              href="https://www.tec.ac.cr/licenciatura-administracion-tecnologias-informacion"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Ver la carrera en el TEC</a
+            >
+          </p>
+        </div>
+      </section>
+
+<section id="que-hacemos" class="section">
         <div class="section-inner">
           <p class="eyebrow">En la práctica</p>
           <h2>Qué hacemos</h2>
@@ -206,9 +441,9 @@
         </div>
       </section>
 
-      <section id="quienes-somos" class="section">
+<section id="quienes-somos" class="section section-alt">
         <div class="section-inner">
-          <p class="eyebrow">Comunidad</p>
+          <p class="eyebrow">La comunidad</p>
           <h2>Quiénes somos</h2>
           <p class="section-lead">
             ASEATI no es solo la Junta Directiva. Si estás estudiando ATI y
@@ -256,97 +491,119 @@
         </div>
       </section>
 
-      <section id="puestos" class="section section-alt">
+<section id="acreditacion" class="section">
         <div class="section-inner">
-          <p class="eyebrow">Cada año</p>
-          <h2>Puestos de la Junta Directiva</h2>
+          <p class="eyebrow">Calidad académica</p>
+          <h2>Acreditación SINAES</h2>
           <p class="section-lead">
-            Estos son los cargos que se ofertan para conformar la Junta. Si te
-            interesa liderar o apoyar, acá tenés una idea clara de cada rol.
+            La licenciatura en Administración de Tecnología de Información del
+            TEC vuelve a acreditarse con el SINAES: un sello oficial de calidad
+            que respalda tu formación.
           </p>
-          <div class="roles-grid">
-            <article>
-              <h3>Presidencia</h3>
-              <p>
-                Coordina la Junta, representa a ASEATI ante el TEC y FEITEC, y
-                da seguimiento a las prioridades de la comunidad.
-              </p>
-            </article>
-            <article>
-              <h3>Vicepresidencia</h3>
-              <p>
-                Apoya a la Presidencia, sustituye cuando hace falta y ayuda a
-                coordinar proyectos transversales.
-              </p>
-            </article>
-            <article>
-              <h3>Secretaría General</h3>
-              <p>
-                Organiza actas, convocatorias y la documentación oficial de la
-                Asociación y sus asambleas.
-              </p>
-            </article>
-            <article>
-              <h3>Prosecretaría General</h3>
-              <p>
-                Respalda el trabajo de Secretaría General y da continuidad a la
-                gestión documental y logística.
-              </p>
-            </article>
-            <article>
-              <h3>Secretaría de Cultura y Deporte</h3>
-              <p>
-                Impulsa actividades culturales, recreativas y deportivas para
-                integrar a la comunidad de ATI.
-              </p>
-            </article>
-            <article>
-              <h3>Secretaría de Finanzas</h3>
-              <p>
-                Administra recursos económicos, presupuestos y la transparencia
-                en el uso de fondos de la Asociación.
-              </p>
-            </article>
-            <article>
-              <h3>Secretaría de Vinculación Empresarial</h3>
-              <p>
-                Conecta a la asociación y al estudiantado con empresas,
-                oportunidades y alianzas externas.
-              </p>
-            </article>
-            <article>
-              <h3>Secretaría de Comunicación y Mercadeo</h3>
-              <p>
-                Mantiene informada a la comunidad y cuida la imagen y difusión
-                de ASEATI en redes y canales oficiales.
-              </p>
-            </article>
-            <article>
-              <h3>Secretaría de Bienestar Estudiantil</h3>
-              <p>
-                Atiende necesidades de bienestar, acompaña inquietudes y
-                promueve un ambiente más humano en la carrera.
-              </p>
-            </article>
-            <article>
-              <h3>Fiscalía Adjunta</h3>
-              <p>
-                Vela por el cumplimiento de acuerdos y normativa interna, y
-                aporta una mirada de fiscalización a la gestión.
-              </p>
-            </article>
-            <article>
-              <h3>Vocalías I, II y III</h3>
-              <p>
-                Apoyan proyectos, comisiones y representación; son un puente
-                directo entre la Junta y el resto del estudiantado.
-              </p>
-            </article>
+
+          <ul class="acred-stats" aria-label="Datos clave de la acreditación">
+            <li>
+              <strong>3.ª</strong>
+              <span>Acreditación consecutiva</span>
+            </li>
+            <li>
+              <strong>2026–2030</strong>
+              <span>Vigencia actual</span>
+            </li>
+            <li>
+              <strong>11 años</strong>
+              <span>Con sello SINAES</span>
+            </li>
+            <li>
+              <strong>~473</strong>
+              <span>Estudiantes activos</span>
+            </li>
+          </ul>
+
+          <div class="section-split acred-layout">
+            <div>
+              <div class="prose">
+                <p>
+                  ATI mantiene de forma ininterrumpida el sello oficial de
+                  calidad del Sistema Nacional de Acreditación de la Educación
+                  Superior (SINAES) desde 2015. La primera acreditación fue en
+                  2015, la segunda en 2021 y esta tercera cubre el periodo
+                  2026–2030.
+                </p>
+                <p>
+                  La ceremonia de entrega de certificaciones se realizó el 13 de
+                  mayo en el auditorio del Centro de las Artes del TEC. El logro
+                  refleja el trabajo articulado entre docencia, investigación y
+                  extensión, y el compromiso de la Escuela con la mejora
+                  continua y la formación de profesionales pertinentes para la
+                  transformación digital.
+                </p>
+                <p>
+                  Para la comunidad estudiantil, la acreditación no es un
+                  símbolo abstracto: significa que la carrera ha sido evaluada
+                  por expertos independientes y cumple con altos estándares
+                  académicos nacionales, fortaleciendo la confianza de la
+                  sociedad en quienes egresan de ATI.
+                </p>
+              </div>
+
+              <blockquote class="acred-quote">
+                <p>
+                  “Significa que cuando mañana salgamos al mercado laboral —en
+                  un campo tan dinámico y exigente como el de un ATI—, lo
+                  haremos con la certeza de que nuestra preparación está
+                  respaldada por un sello de calidad oficial.”
+                </p>
+                <footer>
+                  <cite>Alejandro Vega Gamboa</cite>
+                  <span>Estudiante de ATI</span>
+                </footer>
+              </blockquote>
+            </div>
+
+            <div class="photo-stack acred-photos">
+              <figure class="media-frame">
+                <img
+                  src="/gallery/acreditacion/discurso.jpg"
+                  alt="Estudiante de ATI en el podio durante la ceremonia de acreditación SINAES en el TEC"
+                  loading="lazy"
+                />
+              </figure>
+              <figure class="media-frame">
+                <img
+                  src="/gallery/acreditacion/certificados.jpg"
+                  alt="Entrega de certificados de acreditación SINAES a la carrera de ATI en el Centro de las Artes"
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+          </div>
+
+          <div class="acred-links">
+            <p class="acred-links-label">Más información y noticias</p>
+            <ul>
+              <li>
+                <a
+                  href="https://www.tec.ac.cr/licenciatura-ingenieria-ambiental-administracion-tecnologia-informacion-se-acreditan-vez-mas-sinaes"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Noticia del TEC: ATI se acredita una vez más con el SINAES</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.sinaes.ac.cr/dos-carreras-del-tec-recibieron-de-nuevo-un-certificado-oficial-de-calidad-del-sinaes/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Noticia del SINAES: certificado oficial de calidad</a
+                >
+              </li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <section id="junta" class="section">
+<section id="junta" class="section">
         <div class="section-inner">
           <p class="eyebrow">Periodo actual</p>
           <h2>Junta Directiva 2026</h2>
@@ -457,50 +714,9 @@
         </div>
       </section>
 
-      <section id="tiendati" class="section section-tiendati">
-        <div class="section-inner section-split">
-          <div>
-            <p class="eyebrow">Servicio estudiantil</p>
-            <img
-              class="tiendati-logo"
-              src="/logo-tiendati.png"
-              alt="Logo de TIENDATI"
-              width="320"
-              height="120"
-            />
-            <h2 class="tiendati-title">TIENDATI</h2>
-            <p class="section-lead">
-              En la asociación vendemos snacks, helados, refrescos y más, a
-              precios mucho más cómodos y accesibles para estudiantes.
-            </p>
-            <p class="tiendati-note">
-              También vas a encontrar merch y detalles creados con cariño por la
-              comunidad, como tote bags con identidad ATI. Pasá a visitarnos
-              cuando estés por la asociación.
-            </p>
-          </div>
-          <div class="photo-stack">
-            <figure class="media-frame">
-              <img
-                src="/gallery/tiendati-tote.jpg"
-                alt="Tote bag con diseño ati frente al edificio de la carrera"
-                loading="lazy"
-              />
-            </figure>
-            <figure class="media-frame">
-              <img
-                src="/gallery/tiendati-taller.jpg"
-                alt="Taller creativo de tote bags organizado con la comunidad"
-                loading="lazy"
-              />
-            </figure>
-          </div>
-        </div>
-      </section>
-
-      <section id="remodelacion" class="section section-alt">
+<section id="remodelacion" class="section section-alt">
         <div class="section-inner">
-          <p class="eyebrow">2025 – 2026</p>
+          <p class="eyebrow">Proyectos e iniciativas</p>
           <h2>Remodelación de la ASEATI</h2>
           <p class="section-lead">
             Así fue el proceso de transformar el espacio de la asociación: desde
@@ -668,7 +884,274 @@
         </div>
       </section>
 
-      <section id="reglamento" class="section">
+<section id="tiendati" class="section section-tiendati">
+        <div class="section-inner section-split">
+          <div>
+            <p class="eyebrow">Servicio estudiantil</p>
+            <img
+              class="tiendati-logo"
+              src="/logo-tiendati.png"
+              alt="Logo de TIENDATI"
+              width="320"
+              height="120"
+            />
+            <h2 class="tiendati-title">TIENDATI</h2>
+            <p class="section-lead">
+              En la asociación vendemos snacks, helados, refrescos y más, a
+              precios mucho más cómodos y accesibles para estudiantes.
+            </p>
+            <p class="tiendati-note">
+              También vas a encontrar merch y detalles creados con cariño por la
+              comunidad, como tote bags con identidad ATI. Pasá a visitarnos
+              cuando estés por la asociación.
+            </p>
+          </div>
+          <div class="photo-stack">
+            <figure class="media-frame">
+              <img
+                src="/gallery/tiendati-estantes.jpg"
+                alt="Estantes de TIENDATI con snacks, bebidas y productos para estudiantes"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="media-frame">
+              <img
+                src="/gallery/tiendati-refrigerador.jpg"
+                alt="Refrigerador de TIENDATI con helados, refrescos y bebidas frías"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+<section id="fiestas-ati" class="section">
+        <div class="section-inner">
+          <p class="eyebrow">Vida universitaria</p>
+          <h2>Fiestas ATI</h2>
+          <p class="section-lead">
+            Entre estudiantes del TEC, las Fiestas ATI son un referente:
+            encuentros con mucha energía, buena producción y una comunidad que
+            se hace sentir.
+          </p>
+          <div class="prose">
+            <p>
+              Organizamos eventos sociales que reúnen a ATI y a amistades de
+              otras carreras. Son parte de la cultura estudiantil de la
+              Asociación: música, ambiente y espacios para conectar fuera del
+              aula.
+            </p>
+            <p>
+              Nos importa que se vivan con respeto y sentido de comunidad.
+              Buscamos producción cuidada, identidad propia y esa reputación de
+              hacer algunas de las mejores fiestas universitarias del TEC,
+              cuidando siempre la imagen de ASEATI y de quienes nos acompañan.
+            </p>
+          </div>
+          <p class="fiestas-note">
+            Priorizamos la convivencia responsable y un buen ambiente para toda
+            la comunidad.
+          </p>
+
+          <div
+            class="photo-mosaic fiestas-mosaic"
+            aria-label="Momentos de las Fiestas ATI"
+          >
+            <figure class="mosaic-item mosaic-tall">
+              <img
+                src="/gallery/fiestas/afiche-sold-out.jpg"
+                alt="Afiche sold out de una Fiesta ATI organizada por ASEATI"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item">
+              <img
+                src="/gallery/fiestas/tiquetes.jpg"
+                alt="Tiquetes de entrada de una Fiesta ATI"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item">
+              <img
+                src="/gallery/fiestas/dj-setup.jpg"
+                alt="Producción musical en una Fiesta ATI"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item mosaic-wide">
+              <img
+                src="/gallery/fiestas/publico.jpg"
+                alt="Público reunido en una Fiesta ATI del TEC"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item">
+              <img
+                src="/gallery/fiestas/dj-energia.jpg"
+                alt="DJ animando una Fiesta ATI"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item">
+              <img
+                src="/gallery/fiestas/comunidad.jpg"
+                alt="Comunidad estudiantil en una Fiesta ATI"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item">
+              <img
+                src="/gallery/fiestas/pantalla.jpg"
+                alt="Ambiente visual de una Fiesta ATI"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="mosaic-item mosaic-wide">
+              <img
+                src="/gallery/fiestas/ambiente.jpg"
+                alt="Ambiente festivo y energético de una Fiesta ATI"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+<section id="puestos" class="section section-alt">
+        <div class="section-inner">
+          <p class="eyebrow">Involúcrate</p>
+          <h2>Puestos de la Junta Directiva</h2>
+          <p class="section-lead">
+            Las Asambleas Generales de Estudiantes se realizan dos veces al año
+            (una por semestre) para someter a votación los puestos vacantes de
+            la Junta Directiva. Cualquier persona que cumpla los requisitos
+            puede postularse.
+          </p>
+
+          <div class="prose puestos-intro">
+            <p>
+              Si te interesa liderar o apoyar a la comunidad de ATI, estos son
+              los cargos que se ofertan y las condiciones para participar en el
+              proceso.
+            </p>
+          </div>
+
+          <div class="puestos-requirements">
+            <h3>Requisitos para postularse</h3>
+            <ol>
+              <li>Ser miembro activo de la Asociación (estudiante activo de ATI).</li>
+              <li>
+                No tener sanciones vigentes impuestas por la Federación de
+                Estudiantes del Instituto Tecnológico de Costa Rica (FEITEC) ni
+                por el Instituto Tecnológico de Costa Rica.
+              </li>
+              <li>
+                No formar parte, al momento de la elección, del Tribunal
+                Jurisdiccional, del Tribunal Electoral Estudiantil ni del
+                Consejo Ejecutivo de la FEITEC.
+              </li>
+              <li>No ocupar cargos dentro de la Fiscalía de la Asociación.</li>
+              <li>
+                Cumplir con los requisitos y disposiciones establecidos en el
+                Estatuto Orgánico de la FEITEC y demás normativa federativa
+                aplicable.
+              </li>
+              <li>Ser mayor de edad.</li>
+              <li>
+                No desempeñar, al momento de la elección, cargos docentes o
+                administrativos en el Instituto Tecnológico de Costa Rica.
+              </li>
+            </ol>
+            <p class="puestos-note">
+              Para más detalle sobre el funcionamiento de ASEATI, consultá el
+              <a href="#reglamento">Reglamento interno</a>.
+            </p>
+          </div>
+
+          <h3 class="puestos-roles-title">Cargos que se ofertan</h3>
+          <div class="roles-grid">
+            <article>
+              <h3>Presidencia</h3>
+              <p>
+                Coordina la Junta, representa a ASEATI ante el TEC y FEITEC, y
+                da seguimiento a las prioridades de la comunidad.
+              </p>
+            </article>
+            <article>
+              <h3>Vicepresidencia</h3>
+              <p>
+                Apoya a la Presidencia, sustituye cuando hace falta y ayuda a
+                coordinar proyectos transversales.
+              </p>
+            </article>
+            <article>
+              <h3>Secretaría General</h3>
+              <p>
+                Organiza actas, convocatorias y la documentación oficial de la
+                Asociación y sus asambleas.
+              </p>
+            </article>
+            <article>
+              <h3>Prosecretaría General</h3>
+              <p>
+                Respalda el trabajo de Secretaría General y da continuidad a la
+                gestión documental y logística.
+              </p>
+            </article>
+            <article>
+              <h3>Secretaría de Cultura y Deporte</h3>
+              <p>
+                Impulsa actividades culturales, recreativas y deportivas para
+                integrar a la comunidad de ATI.
+              </p>
+            </article>
+            <article>
+              <h3>Secretaría de Finanzas</h3>
+              <p>
+                Administra recursos económicos, presupuestos y la transparencia
+                en el uso de fondos de la Asociación.
+              </p>
+            </article>
+            <article>
+              <h3>Secretaría de Vinculación Empresarial</h3>
+              <p>
+                Conecta a la asociación y al estudiantado con empresas,
+                oportunidades y alianzas externas.
+              </p>
+            </article>
+            <article>
+              <h3>Secretaría de Comunicación y Mercadeo</h3>
+              <p>
+                Mantiene informada a la comunidad y cuida la imagen y difusión
+                de ASEATI en redes y canales oficiales.
+              </p>
+            </article>
+            <article>
+              <h3>Secretaría de Bienestar Estudiantil</h3>
+              <p>
+                Atiende necesidades de bienestar, acompaña inquietudes y
+                promueve un ambiente más humano en la carrera.
+              </p>
+            </article>
+            <article>
+              <h3>Fiscalía Adjunta</h3>
+              <p>
+                Vela por el cumplimiento de acuerdos y normativa interna, y
+                aporta una mirada de fiscalización a la gestión.
+              </p>
+            </article>
+            <article>
+              <h3>Vocalías I, II y III</h3>
+              <p>
+                Apoyan proyectos, comisiones y representación; son un puente
+                directo entre la Junta y el resto del estudiantado.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+<section id="reglamento" class="section">
         <div class="section-inner">
           <p class="eyebrow">Documento vigente</p>
           <h2>Reglamento interno</h2>
@@ -696,7 +1179,7 @@
           <div class="pdf-frame" role="region" aria-label="Vista previa del reglamento">
             <iframe
               title="Reglamento Interno ASEATI 2026"
-              src="/docs/reglamento-interno-aseati-2026.pdf#view=FitH"
+              data-src="/docs/reglamento-interno-aseati-2026.pdf#view=FitH"
               loading="lazy"
             ></iframe>
             <p class="pdf-fallback">
@@ -711,12 +1194,106 @@
           </div>
         </div>
       </section>
-    </main>
+
+      <section id="consultas" class="section section-alt">
+        <div class="section-inner">
+          <p class="eyebrow">Te escuchamos</p>
+          <h2>Buzón de consultas</h2>
+          <p class="section-lead">
+            Si tenés una consulta, inquietud, situación o sugerencia, podés
+            escribirnos con tus datos o de forma anónima. El mensaje llega a
+            ASEATI.
+          </p>
+
+          <form id="consultas-form" class="consultas-form" novalidate>
+            <fieldset class="consultas-modes">
+              <legend>¿Cómo querés enviarlo?</legend>
+              <label class="consultas-mode">
+                <input type="radio" name="mode" value="identified" checked />
+                <span>Con mis datos</span>
+              </label>
+              <label class="consultas-mode">
+                <input type="radio" name="mode" value="anonymous" />
+                <span>Anónimo</span>
+              </label>
+            </fieldset>
+
+            <p class="consultas-privacy" data-privacy="identified">
+              Usaremos tu nombre y correo solo para entender el caso y
+              responderte, si dejás un medio de contacto.
+            </p>
+            <p class="consultas-privacy" data-privacy="anonymous" hidden>
+              En modo anónimo no pedimos tu nombre. El correo queda opcional,
+              solo si querés que te podamos responder.
+            </p>
+
+            <label>
+              <span data-consultas-label="topic">Tipo de mensaje</span>
+              <select name="topic" required>
+                <option value="Consulta">Consulta</option>
+                <option value="Inquietud">Inquietud</option>
+                <option value="Situación">Situación</option>
+                <option value="Sugerencia">Sugerencia</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </label>
+
+            <label class="consultas-name-field">
+              <span data-consultas-label="name">Nombre</span>
+              <input
+                type="text"
+                name="name"
+                maxlength="120"
+                autocomplete="name"
+                placeholder="Tu nombre"
+              />
+            </label>
+            <label>
+              <span data-consultas-label="email">Correo (opcional)</span>
+              <input
+                type="email"
+                name="email"
+                maxlength="160"
+                autocomplete="email"
+                placeholder="para poder responderte"
+              />
+            </label>
+
+            <label>
+              <span data-consultas-label="message">Mensaje</span>
+              <textarea
+                name="message"
+                rows="6"
+                maxlength="4000"
+                required
+                placeholder="Contanos qué necesitás, con el detalle que te sientas cómodo o cómoda de compartir."
+              ></textarea>
+            </label>
+
+            <div class="consultas-honeypot" aria-hidden="true">
+              <label>
+                No completar
+                <input
+                  type="text"
+                  name="aseati_hp"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Enviar a ASEATI</button>
+            <p class="consultas-status" role="status" aria-live="polite" hidden></p>
+          </form>
+        </div>
+      </section>
+
+</main>
 
     <footer class="site-footer">
       <div class="footer-inner">
         <div class="footer-brand">
-          <img src="/logo-aseati.png" alt="" width="140" height="62" />
+          <img class="footer-logo" src="/logo-aseati.png" alt="" width="140" height="62" />
           <div>
             <p>
               Asociación de Estudiantes de Administración de Tecnología de
@@ -752,6 +1329,10 @@
                 target="_blank"
                 >6293-1796</a
               >
+            </li>
+            <li>
+              Buzón:
+              <a href="#consultas">Escribir una consulta</a>
             </li>
           </ul>
         </div>

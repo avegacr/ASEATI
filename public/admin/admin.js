@@ -849,15 +849,10 @@ loginForm.addEventListener("submit", async (event) => {
 });
 
 togglePasswordBtn?.addEventListener("click", () => {
-  if (!passwordInput) return;
-  const showing = passwordInput.type === "text";
-  passwordInput.type = showing ? "password" : "text";
-  togglePasswordBtn.setAttribute("aria-pressed", showing ? "false" : "true");
-  togglePasswordBtn.setAttribute("aria-label", showing ? "Mostrar contraseña" : "Ocultar contraseña");
-  const eye = togglePasswordBtn.querySelector(".icon-eye");
-  const eyeOff = togglePasswordBtn.querySelector(".icon-eye-off");
-  if (eye) eye.hidden = !showing;
-  if (eyeOff) eyeOff.hidden = showing;
+  if (!passwordInput || !togglePasswordBtn) return;
+  const willShow = passwordInput.type === "password";
+  passwordInput.type = willShow ? "text" : "password";
+  togglePasswordBtn.textContent = willShow ? "Ocultar" : "Mostrar";
   passwordInput.focus();
 });
 

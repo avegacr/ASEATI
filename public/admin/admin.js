@@ -817,6 +817,58 @@ async function uploadFile(file, folder = "gallery") {
   });
 }
 
+/** Normaliza URL de medio local a ruta pública (/gallery/... o /docs/...). */
+function toDeletableMediaPath(url) {
+  if (!url || typeof url !== "string") return null;
+  let path = url.trim();
+  if (!path) return null;
+  try {
+    if (/^https?:\/\//i.test(path)) path = new URL(path).pathname;
+  } catch {
+    return null;
+  }
+  path = path.split("?")[0].split("#")[0].replace(/^\/+/, "");
+  if (path.startsWith("public/")) path = path.slice("public/".length);
+  if (!(path.startsWith("gallery/") || path.startsWith("docs/"))) return null;
+  if (!/\.[a-z0-9]+$/i.test(path)) return null;
+  return `/${path}`;
+}
+
+function countMediaRefs(data, publicPath) {
+  if (!publicPath || !data) return 0;
+  let count = 0;
+  const walk = (node) => {
+    if (typeof node === "string") {
+      if (toDeletableMediaPath(node) === publicPath) count += 1;
+      return;
+    }
+    if (Array.isArray(node)) {
+      node.forEach(walk);
+      return;
+    }
+    if (node && typeof node === "object") {
+      Object.values(node).forEach(walk);
+    }
+  };
+  walk(data);
+  return count;
+}
+
+/** Tras reemplazar una imagen, borra el archivo anterior si ya no se referencia. */
+async function deleteReplacedMedia(previousUrl, newUrl) {
+  const prev = toDeletableMediaPath(previousUrl);
+  const next = toDeletableMediaPath(newUrl);
+  if (!prev || !next || prev === next) return { deleted: false };
+  if (countMediaRefs(content, prev) > 0) {
+    return { deleted: false, kept: true };
+  }
+  const result = await api("/api/media", {
+    method: "DELETE",
+    body: JSON.stringify({ path: prev }),
+  });
+  return { deleted: true, message: result.message };
+}
+
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   loginError.hidden = true;
@@ -1011,6 +1063,13 @@ editor.addEventListener("click", async (event) => {
       const file = input.files?.[0];
       if (!file) return;
       try {
+        let previousUrl = "";
+        if (action === "upload-single") {
+          previousUrl = getPath(content, button.getAttribute("data-target")) || "";
+        } else if (action === "upload" && index >= 0 && base) {
+          previousUrl = ensureArray(base)[index]?.src || "";
+        }
+
         setStatus("Subiendo archivo…");
         const result = await uploadFile(file, folder);
         if (action === "upload-single") {
@@ -1027,7 +1086,20 @@ editor.addEventListener("click", async (event) => {
           arr[index].src = result.url;
         }
         markDirty();
-        setStatus(result.message || "Archivo subido. Guardá los cambios.", "ok");
+
+        let statusMsg = result.message || "Archivo subido. Guardá los cambios.";
+        try {
+          const cleanup = await deleteReplacedMedia(previousUrl, result.url);
+          if (cleanup.deleted) {
+            statusMsg = `Archivo subido y se eliminó el anterior (${toDeletableMediaPath(previousUrl)}). Guardá los cambios.`;
+          } else if (cleanup.kept) {
+            statusMsg = `${statusMsg} La imagen anterior se mantiene porque aún se usa en otro lugar.`;
+          }
+        } catch (cleanupError) {
+          statusMsg = `${statusMsg} No se pudo borrar la anterior: ${cleanupError.message}`;
+        }
+
+        setStatus(statusMsg, "ok");
         renderTab();
       } catch (error) {
         setStatus(error.message, "err");

@@ -5,6 +5,8 @@ const loginView = document.querySelector("#login-view");
 const appView = document.querySelector("#app-view");
 const loginForm = document.querySelector("#login-form");
 const loginError = document.querySelector("#login-error");
+const passwordInput = document.querySelector("#password");
+const togglePasswordBtn = document.querySelector("#toggle-password");
 const editor = document.querySelector("#editor");
 const statusEl = document.querySelector("#status");
 const saveBtn = document.querySelector("#save-btn");
@@ -825,7 +827,7 @@ loginForm.addEventListener("submit", async (event) => {
     submitBtn.textContent = "Entrando…";
   }
   try {
-    const password = document.querySelector("#password").value;
+    const password = passwordInput?.value ?? document.querySelector("#password").value;
     const data = await api("/api/auth", {
       method: "POST",
       body: JSON.stringify({ password }),
@@ -844,6 +846,19 @@ loginForm.addEventListener("submit", async (event) => {
       submitBtn.textContent = previousLabel || "Entrar";
     }
   }
+});
+
+togglePasswordBtn?.addEventListener("click", () => {
+  if (!passwordInput) return;
+  const showing = passwordInput.type === "text";
+  passwordInput.type = showing ? "password" : "text";
+  togglePasswordBtn.setAttribute("aria-pressed", showing ? "false" : "true");
+  togglePasswordBtn.setAttribute("aria-label", showing ? "Mostrar contraseña" : "Ocultar contraseña");
+  const eye = togglePasswordBtn.querySelector(".icon-eye");
+  const eyeOff = togglePasswordBtn.querySelector(".icon-eye-off");
+  if (eye) eye.hidden = !showing;
+  if (eyeOff) eyeOff.hidden = showing;
+  passwordInput.focus();
 });
 
 logoutBtn.addEventListener("click", () => {

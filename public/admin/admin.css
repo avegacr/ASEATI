@@ -81,14 +81,59 @@ textarea {
   font-size: 0.92rem;
 }
 
-.login-card input {
+.password-field {
+  position: relative;
+  display: grid;
+}
+
+.password-field input {
+  min-height: 46px;
+  width: 100%;
+  padding: 0.65rem 3rem 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: #fff;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  min-height: 0 !important;
+  border: 0 !important;
+  border-radius: 0.55rem !important;
+  background: transparent !important;
+  color: var(--ink-soft);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+  color: var(--blue);
+  background: rgba(22, 74, 154, 0.08) !important;
+  outline: none;
+}
+
+.password-toggle svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  display: block;
+}
+
+.login-card input:not(.password-field input) {
   min-height: 46px;
   padding: 0.65rem 0.8rem;
   border: 1px solid var(--line);
   border-radius: 0.7rem;
 }
 
-.login-card button,
+.login-card > button[type="submit"],
 .admin-actions .primary,
 .item-actions button.primary {
   min-height: 46px;
@@ -109,7 +154,7 @@ textarea {
   padding: 0.65rem 0.8rem;
 }
 
-.login-card button:disabled {
+.login-card > button[type="submit"]:disabled {
   opacity: 0.7;
   cursor: wait;
 }

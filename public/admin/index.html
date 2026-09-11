@@ -20,10 +20,30 @@
         <img src="/logo-aseati.png" alt="ASEATI" width="180" height="80" />
         <h1>Panel de administración</h1>
         <p>Ingresá la contraseña compartida de la Junta para editar el contenido del sitio.</p>
-        <label>
-          Contraseña
+        <label for="password">Contraseña</label>
+        <div class="password-field">
           <input id="password" type="password" autocomplete="current-password" required />
-        </label>
+          <button
+            type="button"
+            id="toggle-password"
+            class="password-toggle"
+            aria-label="Mostrar contraseña"
+            aria-pressed="false"
+          >
+            <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M12 5c-5 0-9.3 3.1-11 7 1.7 3.9 6 7 11 7s9.3-3.1 11-7c-1.7-3.9-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"
+              />
+            </svg>
+            <svg class="icon-eye-off" viewBox="0 0 24 24" aria-hidden="true" focusable="false" hidden>
+              <path
+                fill="currentColor"
+                d="M3.3 2.2 2 3.5l3.1 3.1C3.2 8 1.7 9.7 1 12c1.7 3.9 6 7 11 7 1.8 0 3.5-.4 5-1.1l3.5 3.5 1.3-1.3L3.3 2.2zM12 17c-3.5 0-6.5-1.9-8.2-5 .7-1.3 1.8-2.5 3.1-3.3l1.6 1.6A5 5 0 0 0 12 17zm0-10a5 5 0 0 1 4.9 4.1l2.2 2.2c.7-.7 1.3-1.5 1.7-2.3C19.5 6.9 16 5 12 5c-.9 0-1.7.1-2.5.3l1.7 1.7c.3 0 .5-.1.8-.1z"
+              />
+            </svg>
+          </button>
+        </div>
         <button type="submit">Entrar</button>
         <p id="login-error" class="error" hidden></p>
       </form>

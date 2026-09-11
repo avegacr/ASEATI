@@ -128,6 +128,10 @@ function moveButtons() {
 function readFields(root = editor) {
   root.querySelectorAll("[data-key]").forEach((el) => {
     const key = el.getAttribute("data-key");
+    if (el.type === "checkbox") {
+      setPath(content, key, el.checked);
+      return;
+    }
     setPath(content, key, el.value);
   });
 }
@@ -566,10 +570,12 @@ function renderTab() {
 
   if (activeTab === "junta") {
     html = `<section class="panel"><h2>Junta Directiva</h2>
+      ${field("Año", "junta.year", c.junta.year ?? "")}
       ${field("Eyebrow", "junta.eyebrow", c.junta.eyebrow)}
       ${field("Título", "junta.title", c.junta.title)}
       ${field("Lead", "junta.lead", c.junta.lead, true)}
       ${singleImageBlock("Foto grupal", "junta.photo.src", "junta.photo.alt", "junta.photo.caption", "gallery/junta")}
+      <div class="field"><label><input type="checkbox" data-key="junta.photo.hidden" ${c.junta.photo?.hidden ? "checked" : ""} /> Ocultar foto en el sitio público</label></div>
       <h3>Miembros</h3>
       ${membersEditor(c.junta.members)}
     </section>`;
@@ -713,8 +719,18 @@ async function api(path, options = {}) {
     clearTimeout(timeoutId);
   }
 
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(formatHttpError(response.status, data.error));
+  const raw = await response.text().catch(() => "");
+  let data = {};
+  if (raw) {
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = { error: raw.replace(/\s+/g, " ").trim().slice(0, 240) };
+    }
+  }
+  if (!response.ok) {
+    throw new Error(formatHttpError(response.status, data.error || data.message || raw));
+  }
   return data;
 }
 
@@ -725,7 +741,7 @@ const HTTP_ERROR_HINTS = {
   404: "no se encontró el recurso",
   405: "método no permitido",
   408: "la solicitud tardó demasiado",
-  413: "el archivo es demasiado grande para la subida",
+  413: "el archivo es demasiado grande para la subida (probá con una imagen más liviana, máx. ~2 MB)",
   415: "tipo de archivo no soportado",
   429: "demasiados intentos; esperá un momento e intentá de nuevo",
   500: "error interno del servidor",
@@ -737,18 +753,22 @@ const HTTP_ERROR_HINTS = {
 function formatHttpError(status, serverMessage) {
   const code = Number(status) || 0;
   const hint = HTTP_ERROR_HINTS[code] || "ocurrió un error inesperado";
-  const detail = String(serverMessage || "").trim();
+  let detail = String(serverMessage || "").trim();
+
+  // Vercel a veces manda solo "Error 413" o "413 Payload Too Large".
+  detail = detail
+    .replace(/^Error\s*\d+\s*[-–—:]?\s*/i, "")
+    .replace(/^\d+\s*(Payload Too Large)?\s*[-–—:]?\s*/i, "")
+    .trim();
 
   if (!code) {
     return detail || `Error - ${hint}`;
   }
 
-  // Si el backend ya manda "Error 413 - …", respetarlo.
-  if (/^Error\s*\d+/i.test(detail)) return detail;
-
-  // Preferir el mensaje del servidor cuando existe; si no, la pista del código.
-  const explanation = detail || hint;
-  return `Error ${code} - ${explanation}`;
+  if (detail && detail.toLowerCase() !== hint.toLowerCase()) {
+    return `Error ${code} - ${detail}`;
+  }
+  return `Error ${code} - ${hint}`;
 }
 
 function ensureNavDefaults() {
@@ -809,6 +829,7 @@ async function loadContent() {
   if (!staticRes.ok) throw new Error("No se pudo cargar el contenido.");
   content = await staticRes.json();
   ensureNavDefaults();
+  ensureJuntaDefaults();
   renderTab();
 
   try {
@@ -816,11 +837,265 @@ async function loadContent() {
     if (data?.content) content = data.content;
     if (data?.sha) sessionStorage.setItem(SHA_KEY, data.sha);
     ensureNavDefaults();
+    ensureJuntaDefaults();
     renderTab();
   } catch {
     // Keep static content; saving will still try GitHub and report errors.
   }
   clearDirty();
+  await maybeShowJuntaOnboarding();
+}
+
+function ensureJuntaDefaults() {
+  if (!content.junta || typeof content.junta !== "object") content.junta = {};
+  if (!content.junta.photo || typeof content.junta.photo !== "object") {
+    content.junta.photo = { src: "", alt: "", caption: "", hidden: false };
+  }
+  if (content.junta.photo.hidden == null) content.junta.photo.hidden = false;
+  if (!Array.isArray(content.junta.members)) content.junta.members = [];
+  const year =
+    Number(content.junta.year) ||
+    extractYearFromText(content.junta.title) ||
+    new Date().getFullYear();
+  content.junta.year = year;
+}
+
+function extractYearFromText(value) {
+  const match = String(value || "").match(/\b(20\d{2})\b/);
+  return match ? Number(match[1]) : null;
+}
+
+function needsJuntaOnboarding() {
+  if (!content?.junta) return false;
+  const currentYear = new Date().getFullYear();
+  const juntaYear = Number(content.junta.year) || 0;
+  return juntaYear < currentYear;
+}
+
+function replaceYearInJuntaLabel(label, year) {
+  const text = String(label || "").trim();
+  if (!text) return `Junta ${year}`;
+  if (/\b20\d{2}\b/.test(text)) return text.replace(/\b20\d{2}\b/g, String(year));
+  if (/junta/i.test(text)) return `${text} ${year}`.replace(/\s+/g, " ").trim();
+  return text;
+}
+
+function updateJuntaReferencesAcrossSite(year) {
+  const y = String(year);
+
+  if (!content.hero) content.hero = {};
+  if (!content.hero.secondaryCta) content.hero.secondaryCta = { label: "", href: "#junta" };
+  const secondary = content.hero.secondaryCta;
+  if (!secondary.href || /#junta/i.test(secondary.href) || /junta/i.test(secondary.label || "")) {
+    secondary.href = secondary.href || "#junta";
+    secondary.label = replaceYearInJuntaLabel(secondary.label || "Junta", year);
+    if (!/junta/i.test(secondary.label)) secondary.label = `Junta ${y}`;
+  }
+
+  const nav = content.nav;
+  if (nav) {
+    for (const group of nav.groups || []) {
+      if (/junta/i.test(group.label || "") || group.id === "junta") {
+        // Keep group short label; year goes on the specific link.
+      }
+      for (const link of group.links || []) {
+        if (link.href === "#junta" || /junta/i.test(link.label || "")) {
+          if (link.href === "#junta" || /#junta/i.test(link.href || "")) {
+            link.label = replaceYearInJuntaLabel(link.label || "Junta Directiva", year);
+          }
+        }
+      }
+    }
+    for (const link of nav.directLinks || []) {
+      if (link.href === "#junta" || /junta/i.test(link.label || "")) {
+        link.label = replaceYearInJuntaLabel(link.label || "Junta", year);
+      }
+    }
+  }
+
+  // Cualquier texto del contenido que mencione explícitamente "Junta … 20XX".
+  const walk = (node, keyHint = "") => {
+    if (typeof node === "string") {
+      if (!/junta/i.test(node)) return node;
+      // Evitar tocar periodos tipo 2026–2030 de acreditación u otros rangos.
+      if (/\d{4}\s*[–-]\s*\d{4}/.test(node) && !/junta/i.test(keyHint)) return node;
+      return node.replace(
+        /(Junta(?:\s+Directiva)?(?:\s+ASEATI)?(?:\s*directiva)?(?:\s*[·•\-:])?\s*)(20\d{2})/gi,
+        `$1${y}`,
+      );
+    }
+    if (Array.isArray(node)) {
+      for (let i = 0; i < node.length; i += 1) node[i] = walk(node[i], keyHint);
+      return node;
+    }
+    if (node && typeof node === "object") {
+      for (const [k, v] of Object.entries(node)) {
+        // No reescribir URLs/archivos.
+        if (/src|href|url|pdf|path|image/i.test(k) && typeof v === "string") continue;
+        node[k] = walk(v, k);
+      }
+    }
+    return node;
+  };
+
+  walk(content);
+}
+
+async function applyJuntaOnboarding({ year, members, photoMode, photoFile }) {
+  ensureJuntaDefaults();
+  const previousPhoto = content.junta.photo?.src || "";
+
+  content.junta.year = year;
+  content.junta.title = `Junta Directiva ${year}`;
+  content.junta.members = members;
+  content.junta.photo = content.junta.photo || {};
+  content.junta.photo.alt = `Junta Directiva de ASEATI ${year} con camisetas institucionales`;
+  content.junta.photo.caption = `Junta Directiva ASEATI · ${year}`;
+
+  if (photoMode === "hide") {
+    content.junta.photo.hidden = true;
+  } else if (photoMode === "remove") {
+    content.junta.photo.src = "";
+    content.junta.photo.hidden = true;
+  } else if (photoMode === "upload") {
+    if (!photoFile) throw new Error("Seleccioná una imagen para la nueva foto de la Junta.");
+    const maxBytes = 2.5 * 1024 * 1024;
+    if (photoFile.size > maxBytes) {
+      const mb = (photoFile.size / (1024 * 1024)).toFixed(1);
+      throw new Error(
+        `Error 413 - el archivo es demasiado grande para la subida (${mb} MB; máx. ~2.5 MB).`,
+      );
+    }
+    setStatus("Subiendo foto de la Junta…");
+    const uploaded = await uploadFile(photoFile, "gallery/junta");
+    content.junta.photo.src = uploaded.url;
+    content.junta.photo.hidden = false;
+    try {
+      await deleteReplacedMedia(previousPhoto, uploaded.url);
+    } catch {
+      // La nueva foto ya quedó; el borrado anterior es secundario.
+    }
+  } else {
+    content.junta.photo.hidden = false;
+  }
+
+  updateJuntaReferencesAcrossSite(year);
+
+  // Reafirmar campos clave tras el walk global.
+  content.junta.year = year;
+  content.junta.title = `Junta Directiva ${year}`;
+  content.junta.members = members;
+  content.junta.photo.alt = `Junta Directiva de ASEATI ${year} con camisetas institucionales`;
+  content.junta.photo.caption = `Junta Directiva ASEATI · ${year}`;
+
+  if (photoMode === "remove" && previousPhoto) {
+    try {
+      if (countMediaRefs(content, toDeletableMediaPath(previousPhoto)) === 0) {
+        await api("/api/media", {
+          method: "DELETE",
+          body: JSON.stringify({ path: previousPhoto }),
+        });
+      }
+    } catch {
+      // Si falla el borrado, el sitio ya no muestra la foto.
+    }
+  }
+}
+
+const juntaOnboardingEl = document.querySelector("#junta-onboarding");
+const juntaOnboardingForm = document.querySelector("#junta-onboarding-form");
+const juntaMembersList = document.querySelector("#junta-members-list");
+const juntaYearInput = document.querySelector("#junta-year");
+const juntaOnboardingError = document.querySelector("#junta-onboarding-error");
+const juntaPhotoUploadWrap = document.querySelector("#junta-photo-upload-wrap");
+const juntaPhotoFile = document.querySelector("#junta-photo-file");
+const juntaAddMemberBtn = document.querySelector("#junta-add-member");
+
+function setJuntaOnboardingError(message) {
+  if (!juntaOnboardingError) return;
+  const text = String(message || "").trim();
+  juntaOnboardingError.textContent = text;
+  juntaOnboardingError.hidden = !text;
+}
+
+function renderJuntaMemberRows(members) {
+  if (!juntaMembersList) return;
+  const rows = members.length ? members : [{ name: "", role: "" }];
+  juntaMembersList.innerHTML = rows
+    .map(
+      (member, index) => `
+      <div class="junta-member-row" data-index="${index}">
+        <div class="field">
+          <label>Nombre completo</label>
+          <input data-member-name value="${escapeAttr(member.name || "")}" required />
+        </div>
+        <div class="field">
+          <label>Puesto</label>
+          <input data-member-role value="${escapeAttr(member.role || "")}" required />
+        </div>
+        <div class="item-actions">
+          <button type="button" class="danger" data-remove-member>Quitar</button>
+        </div>
+      </div>`,
+    )
+    .join("");
+}
+
+function readJuntaMemberRows() {
+  if (!juntaMembersList) return [];
+  return [...juntaMembersList.querySelectorAll(".junta-member-row")]
+    .map((row) => ({
+      name: row.querySelector("[data-member-name]")?.value.trim() || "",
+      role: row.querySelector("[data-member-role]")?.value.trim() || "",
+    }))
+    .filter((m) => m.name || m.role);
+}
+
+function showJuntaOnboarding() {
+  if (!juntaOnboardingEl || !content) return;
+  const currentYear = new Date().getFullYear();
+  if (juntaYearInput) juntaYearInput.value = String(currentYear);
+  renderJuntaMemberRows(
+    (content.junta.members || []).map((m) => ({
+      name: "",
+      role: m.role || "",
+    })),
+  );
+  setJuntaOnboardingError("");
+  if (juntaPhotoFile) juntaPhotoFile.value = "";
+  const keepRadio = juntaOnboardingForm?.querySelector('input[name="photoMode"][value="keep"]');
+  if (keepRadio) keepRadio.checked = true;
+  if (juntaPhotoUploadWrap) juntaPhotoUploadWrap.hidden = true;
+  juntaOnboardingEl.hidden = false;
+  document.body.style.overflow = "hidden";
+  juntaYearInput?.focus();
+}
+
+function hideJuntaOnboarding() {
+  if (!juntaOnboardingEl) return;
+  juntaOnboardingEl.hidden = true;
+  document.body.style.overflow = "";
+}
+
+async function maybeShowJuntaOnboarding() {
+  if (!needsJuntaOnboarding()) {
+    hideJuntaOnboarding();
+    return;
+  }
+  showJuntaOnboarding();
+}
+
+async function persistContent(message) {
+  const data = await api("/api/content", {
+    method: "PUT",
+    body: JSON.stringify({
+      content,
+      sha: sessionStorage.getItem(SHA_KEY) || undefined,
+    }),
+  });
+  if (data.sha) sessionStorage.setItem(SHA_KEY, data.sha);
+  clearDirty();
+  return data;
 }
 
 function showApp() {
@@ -957,6 +1232,7 @@ togglePasswordBtn?.addEventListener("click", (event) => {
 logoutBtn.addEventListener("click", () => {
   clearSession();
   content = null;
+  hideJuntaOnboarding();
   showLogin();
   setStatus("");
 });
@@ -1096,6 +1372,18 @@ editor.addEventListener("click", async (event) => {
       const file = input.files?.[0];
       if (!file) return;
       try {
+        // El body va en base64 (~+33%) y Vercel corta cerca de 4.5 MB → Error 413.
+        const maxBytes = folder === "docs" ? 4 * 1024 * 1024 : 2.5 * 1024 * 1024;
+        if (file.size > maxBytes) {
+          const mb = (file.size / (1024 * 1024)).toFixed(1);
+          const maxMb = (maxBytes / (1024 * 1024)).toFixed(1);
+          setStatus(
+            `Error 413 - el archivo es demasiado grande para la subida (${mb} MB; máx. ~${maxMb} MB). Comprimilo o usá una imagen más liviana.`,
+            "err",
+          );
+          return;
+        }
+
         let previousUrl = "";
         if (action === "upload-single") {
           previousUrl = getPath(content, button.getAttribute("data-target")) || "";
@@ -1156,5 +1444,75 @@ async function boot() {
     }
   }
 }
+
+juntaAddMemberBtn?.addEventListener("click", () => {
+  const members = readJuntaMemberRows();
+  members.push({ name: "", role: "" });
+  renderJuntaMemberRows(members);
+});
+
+juntaMembersList?.addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-remove-member]");
+  if (!btn) return;
+  const row = btn.closest(".junta-member-row");
+  row?.remove();
+  if (!juntaMembersList.querySelector(".junta-member-row")) {
+    renderJuntaMemberRows([{ name: "", role: "" }]);
+  }
+});
+
+juntaOnboardingForm?.addEventListener("change", (event) => {
+  const target = event.target;
+  if (target?.name === "photoMode" && juntaPhotoUploadWrap) {
+    juntaPhotoUploadWrap.hidden = target.value !== "upload";
+  }
+});
+
+juntaOnboardingForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setJuntaOnboardingError("");
+  const submitBtn = document.querySelector("#junta-onboarding-submit");
+  const previousLabel = submitBtn?.textContent;
+  try {
+    const year = Number(juntaYearInput?.value);
+    if (!Number.isInteger(year) || year < 2020 || year > 2100) {
+      throw new Error("Indicá un año válido para la Junta (por ejemplo 2027).");
+    }
+    const members = readJuntaMemberRows().filter((m) => m.name && m.role);
+    if (!members.length) {
+      throw new Error("Agregá al menos una persona con nombre y puesto.");
+    }
+    const photoMode =
+      juntaOnboardingForm.querySelector('input[name="photoMode"]:checked')?.value || "keep";
+    const photoFile = juntaPhotoFile?.files?.[0] || null;
+    if (photoMode === "upload" && !photoFile) {
+      throw new Error("Seleccioná el archivo de la nueva foto grupal.");
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Guardando…";
+    }
+    setStatus("Actualizando Junta Directiva en todo el sitio…");
+    await applyJuntaOnboarding({ year, members, photoMode, photoFile });
+    const data = await persistContent();
+    hideJuntaOnboarding();
+    renderTab();
+    const deployOk = !data.deploy || data.deploy === "triggered";
+    setStatus(
+      data.message ||
+        `Junta ${year} guardada. El menú, el hero y la sección Junta ya apuntan al nuevo periodo.`,
+      deployOk ? "ok" : "err",
+    );
+  } catch (error) {
+    setJuntaOnboardingError(error.message || "No se pudo guardar la Junta.");
+    setStatus(error.message || "No se pudo guardar la Junta.", "err");
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = previousLabel || "Guardar Junta y actualizar el sitio";
+    }
+  }
+});
 
 boot();

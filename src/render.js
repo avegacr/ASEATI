@@ -273,14 +273,21 @@ export function renderSite(data) {
   );
 
   const junta = data.junta ?? {};
+  const juntaYear = junta.year || extractYearFromText(junta.title) || "";
+  const juntaHeading = junta.title || (juntaYear ? `Junta Directiva ${juntaYear}` : "Junta Directiva");
   setText("#junta .eyebrow", junta.eyebrow);
-  setText("#junta h2", junta.title);
+  setText("#junta h2", juntaHeading);
   setText("#junta .section-lead", junta.lead);
-  if (junta.photo) {
-    setAttr("#junta .media-feature img", "src", junta.photo.src);
-    setAttr("#junta .media-feature img", "alt", junta.photo.alt);
-    setText("#junta .media-feature figcaption", junta.photo.caption);
+  const juntaFigure = document.querySelector("#junta .media-feature");
+  const juntaPhoto = junta.photo ?? {};
+  const hideJuntaPhoto = Boolean(juntaPhoto.hidden) || !String(juntaPhoto.src || "").trim();
+  if (juntaFigure) juntaFigure.hidden = hideJuntaPhoto;
+  if (!hideJuntaPhoto) {
+    setAttr("#junta .media-feature img", "src", juntaPhoto.src);
+    setAttr("#junta .media-feature img", "alt", juntaPhoto.alt);
+    setText("#junta .media-feature figcaption", juntaPhoto.caption);
   }
+  setAttr("#junta .table-wrap", "aria-label", juntaHeading);
   setHtml(
     "#junta .board-table tbody",
     (junta.members ?? [])
@@ -407,6 +414,11 @@ export function renderSite(data) {
     waLink.setAttribute("href", footer.whatsappUrl ?? "#");
   }
   setText("[data-copy-suffix]", footer.copySuffix ?? "");
+}
+
+function extractYearFromText(value) {
+  const match = String(value || "").match(/\b(20\d{2})\b/);
+  return match ? Number(match[1]) : null;
 }
 
 function renderNav(nav) {

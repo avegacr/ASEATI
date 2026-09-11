@@ -416,13 +416,15 @@
     ]
   },
   "junta": {
+    "year": 2026,
     "eyebrow": "Periodo actual",
     "title": "Junta Directiva 2026",
     "lead": "Estas son las personas que hoy representan y administran el trabajo cotidiano de ASEATI.",
     "photo": {
       "src": "/gallery/junta-2026.jpg",
       "alt": "Junta Directiva de ASEATI 2026 con camisetas institucionales",
-      "caption": "Junta Directiva ASEATI · 2026"
+      "caption": "Junta Directiva ASEATI · 2026",
+      "hidden": false
     },
     "members": [
       {

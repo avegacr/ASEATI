@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/admin/admin.css?v=9" />
+    <link rel="stylesheet" href="/admin/admin.css?v=10" />
   </head>
   <body>
     <div id="login-view" class="login-view">
@@ -44,14 +44,14 @@
       <div
         class="junta-onboarding-card"
         role="dialog"
-        aria-modal="true"
+        aria-modal="false"
         aria-labelledby="junta-onboarding-title"
       >
         <h2 id="junta-onboarding-title">Actualización anual de la Junta Directiva</h2>
         <p class="junta-onboarding-lead">
-          Es el primer ingreso del año al panel. Completá los datos de la nueva Junta: se
-          actualizarán el menú, el hero, la sección Junta y el resto de textos del sitio que
-          correspondan a este periodo.
+          El periodo de la Junta en el sitio parece de un año anterior. Conviene actualizar
+          nombres, puestos y foto: eso sincroniza menú, hero y la sección Junta. Si preferís,
+          podés posponerlo y seguir usando el panel con normalidad.
         </p>
         <form id="junta-onboarding-form" class="junta-onboarding-form">
           <div class="field">
@@ -89,9 +89,14 @@
             </div>
           </fieldset>
           <p id="junta-onboarding-error" class="error" hidden></p>
-          <button type="submit" id="junta-onboarding-submit" class="login-submit">
-            Guardar Junta y actualizar el sitio
-          </button>
+          <div class="junta-onboarding-actions">
+            <button type="submit" id="junta-onboarding-submit" class="login-submit">
+              Guardar Junta y actualizar el sitio
+            </button>
+            <button type="button" id="junta-onboarding-later" class="junta-onboarding-later">
+              Ahora no, recordar más tarde
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -134,6 +139,6 @@
       </div>
     </div>
 
-    <script src="/admin/admin.js?v=9" type="module"></script>
+    <script src="/admin/admin.js?v=10" type="module"></script>
   </body>
 </html>

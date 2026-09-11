@@ -273,30 +273,34 @@ export function renderSite(data) {
   );
 
   const junta = data.junta ?? {};
-  const juntaYear = junta.year || extractYearFromText(junta.title) || "";
-  const juntaHeading = junta.title || (juntaYear ? `Junta Directiva ${juntaYear}` : "Junta Directiva");
-  setText("#junta .eyebrow", junta.eyebrow);
-  setText("#junta h2", juntaHeading);
-  setText("#junta .section-lead", junta.lead);
-  const juntaFigure = document.querySelector("#junta .media-feature");
-  const juntaPhoto = junta.photo ?? {};
-  const hideJuntaPhoto = Boolean(juntaPhoto.hidden) || !String(juntaPhoto.src || "").trim();
-  if (juntaFigure) juntaFigure.hidden = hideJuntaPhoto;
-  if (!hideJuntaPhoto) {
-    setAttr("#junta .media-feature img", "src", juntaPhoto.src);
-    setAttr("#junta .media-feature img", "alt", juntaPhoto.alt);
-    setText("#junta .media-feature figcaption", juntaPhoto.caption);
+  try {
+    const juntaYear = junta.year || extractYearFromText(junta.title) || "";
+    const juntaHeading = junta.title || (juntaYear ? `Junta Directiva ${juntaYear}` : "Junta Directiva");
+    setText("#junta .eyebrow", junta.eyebrow);
+    setText("#junta h2", juntaHeading);
+    setText("#junta .section-lead", junta.lead);
+    const juntaFigure = document.querySelector("#junta .media-feature");
+    const juntaPhoto = junta.photo ?? {};
+    const hideJuntaPhoto = Boolean(juntaPhoto.hidden) || !String(juntaPhoto.src || "").trim();
+    if (juntaFigure) juntaFigure.hidden = hideJuntaPhoto;
+    if (!hideJuntaPhoto) {
+      setAttr("#junta .media-feature img", "src", juntaPhoto.src);
+      setAttr("#junta .media-feature img", "alt", juntaPhoto.alt);
+      setText("#junta .media-feature figcaption", juntaPhoto.caption);
+    }
+    setAttr("#junta .table-wrap", "aria-label", juntaHeading);
+    setHtml(
+      "#junta .board-table tbody",
+      (junta.members ?? [])
+        .map(
+          (member, index) =>
+            `<tr><td>${index + 1}</td><td>${escapeHtml(member.name)}</td><td>${escapeHtml(member.role)}</td></tr>`,
+        )
+        .join(""),
+    );
+  } catch (error) {
+    console.warn("No se pudo renderizar la sección Junta:", error);
   }
-  setAttr("#junta .table-wrap", "aria-label", juntaHeading);
-  setHtml(
-    "#junta .board-table tbody",
-    (junta.members ?? [])
-      .map(
-        (member, index) =>
-          `<tr><td>${index + 1}</td><td>${escapeHtml(member.name)}</td><td>${escapeHtml(member.role)}</td></tr>`,
-      )
-      .join(""),
-  );
 
   const tiendati = data.tiendati ?? {};
   setText("#tiendati .eyebrow", tiendati.eyebrow);

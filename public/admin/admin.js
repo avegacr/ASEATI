@@ -569,7 +569,16 @@ function renderTab() {
   }
 
   if (activeTab === "junta") {
+    const pending = needsJuntaOnboarding();
     html = `<section class="panel"><h2>Junta Directiva</h2>
+      ${
+        pending
+          ? `<p class="status" style="display:block">Hay una actualización anual pendiente. Podés completarla ahora o más adelante.</p>
+             <div class="item-actions" style="margin-bottom:0.75rem">
+               <button type="button" class="primary" data-action="open-junta-onboarding">Abrir asistente de Junta</button>
+             </div>`
+          : ""
+      }
       ${field("Año", "junta.year", c.junta.year ?? "")}
       ${field("Eyebrow", "junta.eyebrow", c.junta.eyebrow)}
       ${field("Título", "junta.title", c.junta.title)}
@@ -843,21 +852,30 @@ async function loadContent() {
     // Keep static content; saving will still try GitHub and report errors.
   }
   clearDirty();
-  await maybeShowJuntaOnboarding();
+  try {
+    await maybeShowJuntaOnboarding();
+  } catch (error) {
+    hideJuntaOnboarding();
+    console.warn("Junta onboarding skipped:", error);
+  }
 }
 
 function ensureJuntaDefaults() {
-  if (!content.junta || typeof content.junta !== "object") content.junta = {};
-  if (!content.junta.photo || typeof content.junta.photo !== "object") {
-    content.junta.photo = { src: "", alt: "", caption: "", hidden: false };
+  try {
+    if (!content.junta || typeof content.junta !== "object") content.junta = {};
+    if (!content.junta.photo || typeof content.junta.photo !== "object") {
+      content.junta.photo = { src: "", alt: "", caption: "", hidden: false };
+    }
+    if (content.junta.photo.hidden == null) content.junta.photo.hidden = false;
+    if (!Array.isArray(content.junta.members)) content.junta.members = [];
+    const year =
+      Number(content.junta.year) ||
+      extractYearFromText(content.junta.title) ||
+      new Date().getFullYear();
+    content.junta.year = year;
+  } catch (error) {
+    console.warn("ensureJuntaDefaults failed:", error);
   }
-  if (content.junta.photo.hidden == null) content.junta.photo.hidden = false;
-  if (!Array.isArray(content.junta.members)) content.junta.members = [];
-  const year =
-    Number(content.junta.year) ||
-    extractYearFromText(content.junta.title) ||
-    new Date().getFullYear();
-  content.junta.year = year;
 }
 
 function extractYearFromText(value) {
@@ -865,11 +883,70 @@ function extractYearFromText(value) {
   return match ? Number(match[1]) : null;
 }
 
-function needsJuntaOnboarding() {
-  if (!content?.junta) return false;
+const JUNTA_SNOOZE_KEY = "aseati_junta_onboarding_snooze";
+
+function getJuntaSnooze() {
+  try {
+    const raw = localStorage.getItem(JUNTA_SNOOZE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== "object") return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function isJuntaOnboardingSnoozed() {
+  const data = getJuntaSnooze();
+  if (!data) return false;
+  const until = Number(data.until) || 0;
+  const snoozeYear = Number(data.forCalendarYear) || 0;
   const currentYear = new Date().getFullYear();
-  const juntaYear = Number(content.junta.year) || 0;
-  return juntaYear < currentYear;
+  // Si cambió el año calendario, el snooze anterior ya no aplica.
+  if (snoozeYear && snoozeYear !== currentYear) return false;
+  return until > Date.now();
+}
+
+function snoozeJuntaOnboarding(days = 7) {
+  try {
+    localStorage.setItem(
+      JUNTA_SNOOZE_KEY,
+      JSON.stringify({
+        until: Date.now() + days * 24 * 60 * 60 * 1000,
+        forCalendarYear: new Date().getFullYear(),
+      }),
+    );
+  } catch {
+    // Si localStorage falla, igual se puede cerrar el modal en esta sesión.
+  }
+}
+
+function clearJuntaOnboardingSnooze() {
+  try {
+    localStorage.removeItem(JUNTA_SNOOZE_KEY);
+  } catch {
+    // ignore
+  }
+}
+
+function needsJuntaOnboarding() {
+  try {
+    if (!content?.junta) return false;
+    const currentYear = new Date().getFullYear();
+    const juntaYear = Number(content.junta.year) || 0;
+    return juntaYear > 0 && juntaYear < currentYear;
+  } catch {
+    return false;
+  }
+}
+
+function remindJuntaOnboardingPending() {
+  if (!needsJuntaOnboarding()) return;
+  setStatus(
+    "Pendiente: actualizar la Junta del año nuevo. Podés hacerlo cuando quieras en la pestaña Junta (o reabrir el asistente).",
+    "",
+  );
 }
 
 function replaceYearInJuntaLabel(label, year) {
@@ -881,6 +958,7 @@ function replaceYearInJuntaLabel(label, year) {
 }
 
 function updateJuntaReferencesAcrossSite(year) {
+  try {
   const y = String(year);
 
   if (!content.hero) content.hero = {};
@@ -895,19 +973,14 @@ function updateJuntaReferencesAcrossSite(year) {
   const nav = content.nav;
   if (nav) {
     for (const group of nav.groups || []) {
-      if (/junta/i.test(group.label || "") || group.id === "junta") {
-        // Keep group short label; year goes on the specific link.
-      }
       for (const link of group.links || []) {
-        if (link.href === "#junta" || /junta/i.test(link.label || "")) {
-          if (link.href === "#junta" || /#junta/i.test(link.href || "")) {
-            link.label = replaceYearInJuntaLabel(link.label || "Junta Directiva", year);
-          }
+        if (link.href === "#junta" || /#junta/i.test(link.href || "")) {
+          link.label = replaceYearInJuntaLabel(link.label || "Junta Directiva", year);
         }
       }
     }
     for (const link of nav.directLinks || []) {
-      if (link.href === "#junta" || /junta/i.test(link.label || "")) {
+      if (link.href === "#junta" || /#junta/i.test(link.href || "") || /junta/i.test(link.label || "")) {
         link.label = replaceYearInJuntaLabel(link.label || "Junta", year);
       }
     }
@@ -939,6 +1012,9 @@ function updateJuntaReferencesAcrossSite(year) {
   };
 
   walk(content);
+  } catch (error) {
+    console.warn("updateJuntaReferencesAcrossSite failed:", error);
+  }
 }
 
 async function applyJuntaOnboarding({ year, members, photoMode, photoFile }) {
@@ -1078,11 +1154,21 @@ function hideJuntaOnboarding() {
 }
 
 async function maybeShowJuntaOnboarding() {
-  if (!needsJuntaOnboarding()) {
+  try {
+    if (!needsJuntaOnboarding()) {
+      hideJuntaOnboarding();
+      return;
+    }
+    if (isJuntaOnboardingSnoozed()) {
+      hideJuntaOnboarding();
+      remindJuntaOnboardingPending();
+      return;
+    }
+    showJuntaOnboarding();
+  } catch (error) {
     hideJuntaOnboarding();
-    return;
+    console.warn("maybeShowJuntaOnboarding failed:", error);
   }
-  showJuntaOnboarding();
 }
 
 async function persistContent(message) {
@@ -1296,6 +1382,16 @@ editor.addEventListener("click", async (event) => {
     return;
   }
 
+  if (action === "open-junta-onboarding") {
+    if (!needsJuntaOnboarding()) {
+      setStatus("La Junta ya está al día con el año actual.", "ok");
+      return;
+    }
+    clearJuntaOnboardingSnooze();
+    showJuntaOnboarding();
+    return;
+  }
+
   if (action === "copy-url") {
     const url = button.getAttribute("data-url");
     try {
@@ -1468,6 +1564,12 @@ juntaOnboardingForm?.addEventListener("change", (event) => {
   }
 });
 
+document.querySelector("#junta-onboarding-later")?.addEventListener("click", () => {
+  snoozeJuntaOnboarding(7);
+  hideJuntaOnboarding();
+  remindJuntaOnboardingPending();
+});
+
 juntaOnboardingForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   setJuntaOnboardingError("");
@@ -1496,6 +1598,7 @@ juntaOnboardingForm?.addEventListener("submit", async (event) => {
     setStatus("Actualizando Junta Directiva en todo el sitio…");
     await applyJuntaOnboarding({ year, members, photoMode, photoFile });
     const data = await persistContent();
+    clearJuntaOnboardingSnooze();
     hideJuntaOnboarding();
     renderTab();
     const deployOk = !data.deploy || data.deploy === "triggered";

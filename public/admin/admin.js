@@ -706,16 +706,49 @@ async function api(path, options = {}) {
     });
   } catch (error) {
     if (error?.name === "AbortError") {
-      throw new Error("La solicitud tardó demasiado. Intentá de nuevo.");
+      throw new Error("Error de tiempo de espera - la solicitud tardó demasiado. Intentá de nuevo.");
     }
-    throw new Error("No se pudo conectar con el servidor. Revisá tu conexión.");
+    throw new Error("Error de conexión - no se pudo conectar con el servidor. Revisá tu conexión.");
   } finally {
     clearTimeout(timeoutId);
   }
 
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || `Error ${response.status}`);
+  if (!response.ok) throw new Error(formatHttpError(response.status, data.error));
   return data;
+}
+
+const HTTP_ERROR_HINTS = {
+  400: "la solicitud no es válida",
+  401: "sesión inválida o expirada; volvé a iniciar sesión",
+  403: "no tenés permiso para esta acción",
+  404: "no se encontró el recurso",
+  405: "método no permitido",
+  408: "la solicitud tardó demasiado",
+  413: "el archivo es demasiado grande para la subida",
+  415: "tipo de archivo no soportado",
+  429: "demasiados intentos; esperá un momento e intentá de nuevo",
+  500: "error interno del servidor",
+  502: "el servidor no respondió correctamente",
+  503: "servicio no disponible temporalmente",
+  504: "el servidor tardó demasiado en responder",
+};
+
+function formatHttpError(status, serverMessage) {
+  const code = Number(status) || 0;
+  const hint = HTTP_ERROR_HINTS[code] || "ocurrió un error inesperado";
+  const detail = String(serverMessage || "").trim();
+
+  if (!code) {
+    return detail || `Error - ${hint}`;
+  }
+
+  // Si el backend ya manda "Error 413 - …", respetarlo.
+  if (/^Error\s*\d+/i.test(detail)) return detail;
+
+  // Preferir el mensaje del servidor cuando existe; si no, la pista del código.
+  const explanation = detail || hint;
+  return `Error ${code} - ${explanation}`;
 }
 
 function ensureNavDefaults() {

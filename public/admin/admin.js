@@ -848,12 +848,23 @@ loginForm.addEventListener("submit", async (event) => {
   }
 });
 
-togglePasswordBtn?.addEventListener("click", () => {
+function syncPasswordToggle() {
   if (!passwordInput || !togglePasswordBtn) return;
-  const willShow = passwordInput.type === "password";
-  passwordInput.type = willShow ? "text" : "password";
-  togglePasswordBtn.textContent = willShow ? "Ocultar" : "Mostrar";
-  passwordInput.focus();
+  const visible = passwordInput.type === "text";
+  togglePasswordBtn.textContent = visible ? "Ocultar" : "Mostrar";
+  togglePasswordBtn.setAttribute(
+    "aria-label",
+    visible ? "Ocultar contraseña" : "Mostrar contraseña"
+  );
+}
+
+togglePasswordBtn?.addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  if (!passwordInput || !togglePasswordBtn) return;
+  passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+  syncPasswordToggle();
+  passwordInput.focus({ preventScroll: true });
 });
 
 logoutBtn.addEventListener("click", () => {

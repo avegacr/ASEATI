@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/admin/admin.css" />
+    <link rel="stylesheet" href="/admin/admin.css?v=4" />
   </head>
   <body>
     <div id="login-view" class="login-view">
@@ -23,7 +23,13 @@
         <label for="password">Contraseña</label>
         <div class="password-field">
           <input id="password" type="password" autocomplete="current-password" required />
-          <button type="button" id="toggle-password" class="password-toggle">
+          <button
+            type="button"
+            id="toggle-password"
+            class="password-toggle"
+            aria-label="Mostrar contraseña"
+            aria-controls="password"
+          >
             Mostrar
           </button>
         </div>
@@ -70,6 +76,6 @@
       </div>
     </div>
 
-    <script src="/admin/admin.js" type="module"></script>
+    <script src="/admin/admin.js?v=4" type="module"></script>
   </body>
 </html>

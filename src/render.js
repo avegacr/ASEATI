@@ -55,8 +55,6 @@ export function renderSite(data) {
   const hero = data.hero ?? {};
   setAttr(".hero-logo", "src", hero.logoSrc);
   setAttr(".hero-logo", "alt", hero.logoAlt);
-  setAttr(".brand-logo", "src", hero.logoSrc || "/logo-aseati.png");
-  setAttr(".brand-logo", "alt", hero.logoAlt || "ASEATI");
   setAttr(".footer-logo", "src", hero.logoSrc || "/logo-aseati.png");
   setText("#inicio h1", hero.title);
   setText(".hero-lead", hero.lead);

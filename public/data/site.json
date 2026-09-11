@@ -53,15 +53,15 @@
       },
       {
         "id": "junta",
-        "label": "Junta",
+        "label": "Junta directiva",
         "links": [
           {
             "href": "#junta",
-            "label": "Junta 2026"
+            "label": "Junta directiva 2026"
           },
           {
             "href": "#puestos",
-            "label": "Puestos"
+            "label": "Puestos de la ASEATI"
           }
         ]
       },
@@ -71,7 +71,7 @@
         "links": [
           {
             "href": "#reglamento",
-            "label": "Reglamento"
+            "label": "Reglamento interno vigente"
           }
         ]
       }
@@ -79,7 +79,7 @@
     "directLinks": [
       {
         "href": "#consultas",
-        "label": "Consultas"
+        "label": "¡Escríbenos tus consultas!"
       }
     ]
   },

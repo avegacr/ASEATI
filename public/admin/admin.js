@@ -850,8 +850,10 @@ loginForm.addEventListener("submit", async (event) => {
 
 function syncPasswordToggle() {
   if (!passwordInput || !togglePasswordBtn) return;
+  const field = passwordInput.closest(".password-field");
   const visible = passwordInput.type === "text";
-  togglePasswordBtn.textContent = visible ? "Ocultar" : "Mostrar";
+  field?.classList.toggle("is-visible", visible);
+  togglePasswordBtn.setAttribute("aria-pressed", visible ? "true" : "false");
   togglePasswordBtn.setAttribute(
     "aria-label",
     visible ? "Ocultar contraseña" : "Mostrar contraseña"
@@ -861,7 +863,7 @@ function syncPasswordToggle() {
 togglePasswordBtn?.addEventListener("click", (event) => {
   event.preventDefault();
   event.stopPropagation();
-  if (!passwordInput || !togglePasswordBtn) return;
+  if (!passwordInput) return;
   passwordInput.type = passwordInput.type === "password" ? "text" : "password";
   syncPasswordToggle();
   passwordInput.focus({ preventScroll: true });

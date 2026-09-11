@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/admin/admin.css?v=4" />
+    <link rel="stylesheet" href="/admin/admin.css?v=5" />
   </head>
   <body>
     <div id="login-view" class="login-view">
@@ -29,8 +29,10 @@
             class="password-toggle"
             aria-label="Mostrar contraseña"
             aria-controls="password"
+            aria-pressed="false"
           >
-            Mostrar
+            <span class="password-toggle-show">Mostrar</span>
+            <span class="password-toggle-hide">Ocultar</span>
           </button>
         </div>
         <button type="submit" class="login-submit">Entrar</button>
@@ -76,6 +78,6 @@
       </div>
     </div>
 
-    <script src="/admin/admin.js?v=4" type="module"></script>
+    <script src="/admin/admin.js?v=5" type="module"></script>
   </body>
 </html>

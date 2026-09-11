@@ -82,32 +82,46 @@ textarea {
 }
 
 .password-field {
-  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
   min-width: 0;
-}
-
-.password-field input {
-  display: block;
-  width: 100%;
   min-height: 46px;
-  padding: 0.65rem 5.25rem 0.65rem 0.8rem;
   border: 1px solid var(--line);
   border-radius: 0.7rem;
   background: #fff;
+  overflow: hidden;
+}
+
+.password-field:focus-within {
+  border-color: rgba(22, 74, 154, 0.55);
+  box-shadow: 0 0 0 3px rgba(22, 74, 154, 0.12);
+}
+
+.password-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0.65rem 0.35rem 0.65rem 0.8rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  outline: none;
+  box-shadow: none;
 }
 
 .password-toggle {
-  position: absolute;
-  top: 50%;
-  right: 0.45rem;
-  transform: translateY(-50%);
-  z-index: 1;
-  height: 2rem;
-  padding: 0 0.55rem;
+  flex: 0 0 auto;
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.75rem;
+  padding: 0 0.85rem;
   border: 0;
-  border-radius: 0.45rem;
-  background: transparent;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+  background: rgba(22, 74, 154, 0.04);
   color: var(--blue);
   font-weight: 600;
   font-size: 0.82rem;
@@ -120,6 +134,18 @@ textarea {
 .password-toggle:focus-visible {
   background: rgba(22, 74, 154, 0.1);
   outline: none;
+}
+
+.password-toggle-hide {
+  display: none;
+}
+
+.password-field.is-visible .password-toggle-show {
+  display: none;
+}
+
+.password-field.is-visible .password-toggle-hide {
+  display: inline;
 }
 
 .login-submit,

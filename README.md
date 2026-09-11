@@ -49,7 +49,7 @@ Configurá estas variables en el proyecto de Vercel (Settings → Environment Va
 | `GITHUB_TOKEN` | Personal Access Token con permiso de escritura en el repo |
 | `GITHUB_REPO` | `avegacr/ASEATI` |
 | `GITHUB_BRANCH` | `main` |
-| `DEPLOY_HOOK_URL` | (Opcional) Deploy Hook de Vercel para forzar redeploy al guardar |
+| `DEPLOY_HOOK_URL` | **Recomendado.** Deploy Hook de Vercel (Settings → Git → Deploy Hooks). Sin esto, Guardar en `/admin` escribe GitHub pero la web pública puede no actualizarse. |
 | `SITE_URL` | Origen público. Hoy `https://aseati.vercel.app`; al activar el dominio, `https://aseati.com` |
 | `CONTACT_TO_EMAIL` | (Opcional) Destino del buzón. Por defecto `aseati@estudiantec.cr` |
 | `WEB3FORMS_ACCESS_KEY` | Clave de [Web3Forms](https://web3forms.com) para entregar el buzón a `aseati@estudiantec.cr` |

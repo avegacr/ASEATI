@@ -868,13 +868,14 @@ saveBtn.addEventListener("click", async () => {
     });
     if (data.sha) sessionStorage.setItem(SHA_KEY, data.sha);
     clearDirty();
-    setSaveButtonState("saved");
+    const deployOk = !data.deploy || data.deploy === "triggered";
+    setSaveButtonState(deployOk ? "saved" : "error");
     setStatus(
       data.message ||
         "Listo: cambios guardados. El sitio público puede tardar 1–2 minutos en actualizarse.",
-      "ok",
+      deployOk ? "ok" : "err",
     );
-    window.setTimeout(() => setSaveButtonState("idle"), 2500);
+    window.setTimeout(() => setSaveButtonState("idle"), deployOk ? 2500 : 4500);
   } catch (error) {
     setSaveButtonState("error");
     setStatus(error.message || "No se pudo guardar. Intentá de nuevo.", "err");

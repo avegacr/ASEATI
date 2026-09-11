@@ -53,18 +53,32 @@ export default async function handler(req, res) {
         sha,
       );
 
-      if (process.env.DEPLOY_HOOK_URL) {
+      let deploy = "missing_hook";
+      const hookUrl = process.env.DEPLOY_HOOK_URL;
+      if (hookUrl) {
         try {
-          await fetch(process.env.DEPLOY_HOOK_URL, { method: "POST" });
+          const hookRes = await fetch(hookUrl, { method: "POST" });
+          deploy = hookRes.ok ? "triggered" : `failed_${hookRes.status}`;
         } catch {
-          // Non-blocking: content is already in GitHub.
+          deploy = "failed_network";
         }
       }
+
+      const messages = {
+        triggered: "Guardado. El sitio público se actualizará en 1–2 minutos.",
+        missing_hook:
+          "Guardado en GitHub, pero falta DEPLOY_HOOK_URL en Vercel: la web puede no refrescarse sola.",
+        failed_network:
+          "Guardado en GitHub, pero no se pudo disparar el redeploy. Revisá el Deploy Hook.",
+      };
 
       return json(res, 200, {
         ok: true,
         sha: result.content?.sha,
-        message: "Cambios enviados; el sitio se actualizará en 1–2 minutos.",
+        deploy,
+        message:
+          messages[deploy] ||
+          `Guardado en GitHub, pero el redeploy respondió mal (${deploy}).`,
       });
     } catch (error) {
       return json(res, 500, { error: error.message || "No se pudo guardar." });
